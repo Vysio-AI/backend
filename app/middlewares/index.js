@@ -21,11 +21,16 @@ const catchError = async function catchError(ctx, next) {
   }
 }
 
-const setUser = async function setUser(ctx, next) {
+const authenticateUser = async function setUser(ctx, next) {
+  ctx.user = {
+    id: 2,
+    firstName: "Test",
+    lastName: "Test last"
+  }
   await next()
 }
 
 module.exports = {
   catchError,
-  setUser,
+  authenticateUser,
 }

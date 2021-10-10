@@ -7,5 +7,6 @@ const router = Router({
 
 router.get('/', users.index);
 router.post('/', users.create);
+router.get('/:id', users.get);
 
 module.exports = router
