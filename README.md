@@ -20,6 +20,10 @@ We use Postgres as our database with Prisma for an ORM. Any schema changes can b
 
 Create a new migration after changing the schema: ```npx prisma migrate dev --name MIGRATION_NAME```
 
+Open Prisma Studio (GUI) in browser: ```npx prisma studio```
+
+Whenever you make changes to your database that are reflected in the Prisma schema, you need to manually re-generate Prisma Client to update the generated code in the node_modules/.prisma/client directory: ```npx prisma generate```
+
 ### Using pgadmin
 If you use the docker-compose.yml within this repository to spin up the postgres instance, it will also create an instance of pgadmin. Pgadmin is a gui tool for managing postgres databases that may come in handy for troubleshooting.
 
