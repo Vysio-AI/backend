@@ -6,14 +6,18 @@ const processMsg = (msg) => {
   const obj = JSON.parse(msg);
   obj.userId = 2;
   return obj;
-}
+};
 
-const setup = (io, socket) => {
-  console.log('Connected');
-  socket.on('message', (msg) => {
-    console.log(msg);
-    const processed = processMsg(msg);
-    io.emit('message', processed);
+const setup = (io) => {
+  io.on('connection', (socket) => {
+    // On connected
+    console.log('Connected');
+
+    // Handle message
+    socket.on('message', (msg) => {
+      console.log(msg);
+      io.emit('message', "Got the message!");
+    });
   });
 }
 
