@@ -10,37 +10,135 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  email     String     @unique
-  firstName String
-  lastName  String
-  role      Role       @default(USER)
-  protocols Protocol[]
-  sessions  Session[]
+model Organization {
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  name          String
+  email         String?        @unique
+  phoneNumber   String?
+  address       String?
+  country       String?        @default("Canada")
+  province      String?
+  city          String?
+  streetAddress String?
+  postalCode    String?
+  imageUrl      String?
+  accessCode    Int
+  practitioners Practitioner[]
+}
+
+model PractitionerNotificationSettings {
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  email          Boolean      @default(false)
+  sms            Boolean      @default(false)
+  Practitioner   Practitioner @relation(fields: [practitionerId], references: [id])
+  practitionerId Int          @unique
+}
+
+model ClientNotificationSettings {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     Boolean  @default(false)
+  sms       Boolean  @default(false)
+  Client    Client   @relation(fields: [clientId], references: [id])
+  clientId  Int      @unique
+}
+
+model Practitioner {
+  id                   Int                               @id @default(autoincrement())
+  createdAt            DateTime                          @default(now())
+  updatedAt            DateTime                          @updatedAt
+  email                String                            @unique
+  firstName            String
+  lastName             String
+  phoneNumber          String?
+  clients              Client[]
+  notificationSettings PractitionerNotificationSettings?
+  Organization         Organization?                     @relation(fields: [organizationId], references: [id])
+  organizationId       Int?
+}
+
+model Client {
+  id                   Int                         @id @default(autoincrement())
+  createdAt            DateTime                    @default(now())
+  updatedAt            DateTime                    @updatedAt
+  email                String                      @unique
+  firstName            String
+  lastName             String
+  phoneNumber          String?
+  protocols            Protocol[]
+  Practitioner         Practitioner?               @relation(fields: [practitionerId], references: [id])
+  practitionerId       Int?
+  notificationSettings ClientNotificationSettings?
 }
 
 model Session {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sessionFrames SessionFrame[]
+  Protocol      Protocol       @relation(fields: [protocolId], references: [id])
+  protocolId    Int
+}
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
+model SessionFrame {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  startTime  DateTime
+  endTime    DateTime
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+  Session    Session?  @relation(fields: [sessionId], references: [id])
+  sessionId  Int?
+  exerciseId Int
+}
+
+enum ActivityType {
+  PENDULUM
+  ABDUCTION
+  FORWARD_ELEVATION
+  INTERNAL_ROTATION
+  EXTERNAL_ROTATION
+  TRAPEZIUS_EXTENSION
+  UPRIGHT_ROW
+}
+
+model Exercise {
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  activityType  ActivityType
+  duration      BigInt
+  Protocol      Protocol?      @relation(fields: [protocolId], references: [id])
+  protocolId    Int?
+  sessionFrames SessionFrame[]
 }
 
 model Protocol {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  id                  Int        @id @default(autoincrement())
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  active              Boolean    @default(false)
+  activatedAt         DateTime?
+  deactivatedAt       DateTime?
+  completionFrequency Frequency
+  Client              Client     @relation(fields: [clientId], references: [id])
+  clientId            Int
+  sessions            Session[]
+  exercises           Exercise[]
 }
 
-enum Role {
-  USER
-  PRACTITIONER
-  ADMIN
+enum Frequency {
+  E1D
+  E2D
+  E3D
+  E4D
+  E5D
+  E6D
+  E7D
+  E14D
 }

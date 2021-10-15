@@ -16,8 +16,15 @@ const setup = (io) => {
     // Handle message
     socket.on('message', (msg) => {
       console.log(msg);
-      io.emit('message', "Got the message!");
+      io.emit('message', {
+        "message": "A message"
+      });
     });
+
+    socket.on('watchMessage', (msg) => {
+
+      io.emit('watchMessage', "ack")
+    })
   });
 }
 
