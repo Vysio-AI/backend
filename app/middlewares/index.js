@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
+const jwt = require('koa-jwt');
+const jwksRsa = require('jwks-rsa');
 
 const catchError = async function catchError(ctx, next) {
   try {
@@ -24,7 +26,8 @@ const catchError = async function catchError(ctx, next) {
       console.log('Unauthorized', err, ctx);
       ctx.body = {
         errors: "Unauthorized",
-        status: ctx.status
+        status: ctx.status,
+        error: err
       }
     } else {
       console.log('Unknown error: ', ctx, err);
@@ -36,14 +39,17 @@ const catchError = async function catchError(ctx, next) {
   }
 }
 
-const checkToken = async function checkToken(ctx, next) {
-  ctx.user = {
-    id: 2,
-    firstName: "Test",
-    lastName: "Test last"
-  }
-  await next()
-}
+const checkToken = jwt({
+  secret: jwksRsa.koaJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://petermarshall.us.auth0.com/.well-known/jwks.json`
+  }),
+  audience: 'https://api.vysio.ca',
+  issuer: 'https://petermarshall.us.auth0.com/',
+  algorithms: ['RS256', 'HS256']
+});
 
 module.exports = {
   catchError,
