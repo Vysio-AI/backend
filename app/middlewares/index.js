@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 const jwt = require('koa-jwt');
 const jwksRsa = require('jwks-rsa');
 
-const catchError = async function catchError(ctx, next) {
+const catchError = async (ctx, next) => {
   try {
     await next();
     if (ctx.status === 404) ctx.throw(404);
@@ -30,7 +30,6 @@ const catchError = async function catchError(ctx, next) {
         error: err
       }
     } else {
-      console.log('Unknown error: ', ctx, err);
       ctx.body = {
         errors: "Error",
         status: ctx.status,
@@ -51,7 +50,36 @@ const checkToken = jwt({
   algorithms: ['RS256', 'HS256']
 });
 
+const setUser = async (ctx, next) => {
+  const user = ctx.state.user;
+  console.log(user);
+  const client = await prisma.client.findUnique({
+    where: {
+      auth0Sub: user.sub
+    }
+  });
+
+  const practitioner = await prisma.practitioner.findUnique({
+    where: {
+      auth0Sub: user.sub
+    }
+  });
+
+  if (client != null) {
+    ctx.client = client
+  } else if (practitioner != null) {
+    ctx.practitioner = practitioner
+  } else {
+    console.log('test')
+    if (ctx.request.url != '/api/v1/clients/signup' && ctx.request.url != '/api/v1/practitioners/signup') {
+      ctx.status = 401
+    }
+  }
+  await next();
+}
+
 module.exports = {
   catchError,
   checkToken,
+  setUser,
 }

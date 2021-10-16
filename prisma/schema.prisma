@@ -56,6 +56,7 @@ model Practitioner {
   firstName            String
   lastName             String
   phoneNumber          String?
+  auth0Sub             String                            @unique
   clients              Client[]
   notificationSettings PractitionerNotificationSettings?
   Organization         Organization?                     @relation(fields: [organizationId], references: [id])
@@ -70,6 +71,7 @@ model Client {
   firstName            String
   lastName             String
   phoneNumber          String?
+  auth0Sub             String                      @unique
   protocols            Protocol[]
   Practitioner         Practitioner?               @relation(fields: [practitionerId], references: [id])
   practitionerId       Int?

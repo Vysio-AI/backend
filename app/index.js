@@ -6,7 +6,8 @@ const logger = require('koa-logger');
 const cors = require('@koa/cors');
 
 
-const rootRouter = require('./routes/root');
+const authenticatedRouter = require('./routes/authenticated');
+const publicRouter = require('./routes/public');
 const middlewares = require("./middlewares/index");
 const socketio = require("./socketio/handlers");
 
@@ -18,12 +19,12 @@ app.use(logger());
 app.use(bodyParser());
 app.use(cors());
 
-// Apply middlewares
+// Apply global middlewares
 app.use(middlewares.catchError);
-app.use(middlewares.checkToken);
 
 // Define routes
-app.use(rootRouter.routes());
+app.use(publicRouter.routes());
+app.use(authenticatedRouter.routes());
 
 // Set up socketio
 const httpServer = require("http").createServer(app.callback());

@@ -10,23 +10,6 @@ const index = async (ctx) => {
   ctx.status = 200;
 };
 
-const create = async (ctx) => {
-  const client = await prisma.client.create({
-    data: ctx.request.body
-  });
-
-  const settings = await prisma.clientNotificationSettings.create({
-    data: {
-      clientId: client.id
-    }
-  });
-
-  ctx.body = {
-    data: client
-  };
-  ctx.status = 200;
-}
-
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
   const client = await prisma.client.findUnique({
@@ -93,7 +76,6 @@ const updateNotificationSettings = async (ctx) => {
 
 module.exports = {
   index,
-  create,
   get,
   update,
   destroy,
