@@ -66,8 +66,10 @@ const setUser = async (ctx, next) => {
   });
 
   if (client != null) {
+    ctx.userType = 'client'
     ctx.client = client
   } else if (practitioner != null) {
+    ctx.userType = 'practitioner'
     ctx.practitioner = practitioner
   } else {
     console.log('test')
@@ -75,7 +77,7 @@ const setUser = async (ctx, next) => {
       ctx.status = 401
     }
   }
-  await next();
+  await next(ctx);
 }
 
 module.exports = {

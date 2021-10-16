@@ -15,6 +15,16 @@ const setup = (io) => {
     // On connected
     console.log('Connected');
 
+    socket.on('startSession', (msg) => {
+      // Create session in DB
+      // Send back sessionID
+    })
+
+    socket.on('endSession', (msg) => {
+      // Update endtime of session
+      // Send back acknowledgement
+    })
+
     socket.on('message', (msg) => {
       let timestamp = new Date();
       timestamp = timestamp.toJSON();
@@ -31,9 +41,7 @@ const setup = (io) => {
       }
 
       kafka.sendMessage('watch', "1", JSON.stringify(testMessage));
-      console.log('message');
-      io.emit('message', "ack");
-    })
+    });
   });
 }
 

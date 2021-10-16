@@ -25,7 +25,7 @@ app.use(cors());
 app.use(middlewares.catchError);
 
 // Set up Kafka
-app.use(kafka.setup);
+kafka.setup();
 
 // Define routes
 app.use(publicRouter.routes());

@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon app/index.js"
+    "start": "nodemon app/index.js",
+    "start-prod": "node app/index.js",
+    "migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",
