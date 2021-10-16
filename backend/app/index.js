@@ -11,6 +11,8 @@ const publicRouter = require('./routes/public');
 const middlewares = require("./middlewares/index");
 const socketio = require("./socketio/handlers");
 
+const kafka = require("./kafka/index");
+
 require('dotenv').config();
 
 const app = new Koa();
@@ -21,6 +23,9 @@ app.use(cors());
 
 // Apply global middlewares
 app.use(middlewares.catchError);
+
+// Set up Kafka
+kafka.setup();
 
 // Define routes
 app.use(publicRouter.routes());
