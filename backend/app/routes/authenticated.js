@@ -4,6 +4,7 @@ const Router = require('@koa/router');
 const clients = require('../controllers/clients');
 const practitioners = require('../controllers/practitioners');
 const signups = require('../controllers/signups');
+const protocols = require('../controllers/protocols');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -36,5 +37,11 @@ router.patch('/clients/:id/notification-settings', m.checkToken, m.setUser, clie
 // Signups
 router.post('/practitioners/signup', m.checkToken, m.setUser, signups.signupPractitioner);
 router.post('/clients/signup', m.checkToken, m.setUser, signups.signupClient);
+
+// Protocols
+router.post('/protocols', m.checkToken, m.setUser, protocols.create);
+router.get('/protocols/:id', m.checkToken, m.setUser, protocols.get);
+router.post('/protocols/:id', m.checkToken, m.setUser, protocols.update);
+router.delete('/protocols/:id', m.checkToken, m.setUser, protocols.destroy);
 
 module.exports = router
