@@ -74,11 +74,26 @@ const updateNotificationSettings = async (ctx) => {
   ctx.status = 200;
 }
 
+const getAllProtocols = async (ctx) => {
+  const userId = parseInt(ctx.params.id);
+  const protocols = await prisma.protocol.findMany({
+    where: {
+      userId: userId
+    }
+  });
+
+  ctx.body = {
+    data: protocols
+  };
+  ctx.status = 200;
+}
+
 module.exports = {
   index,
   get,
   update,
   destroy,
   getNotificationSettings,
-  updateNotificationSettings
+  updateNotificationSettings,
+  getAllProtocols
 };

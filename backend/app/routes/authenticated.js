@@ -5,6 +5,8 @@ const clients = require('../controllers/clients');
 const practitioners = require('../controllers/practitioners');
 const signups = require('../controllers/signups');
 const protocols = require('../controllers/protocols');
+const exercises = require('../controllers/exercises');
+const sessions = require('../controllers/sessions');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -19,6 +21,7 @@ router.get('/clients', m.checkToken, m.setUser, clients.index);
 router.get('/clients/:id', m.checkToken, m.setUser, clients.get);
 router.patch('/clients/:id', m.checkToken, m.setUser, clients.update);
 router.delete('/clients/:id', m.checkToken, m.setUser, clients.destroy);
+router.get('/clients/:id/protocols', m.checkToken, m.setUser, clients.getAllProtocols)
 
 // Practitioners
 router.get('/practitioners', m.checkToken, m.setUser, practitioners.index)
@@ -43,5 +46,19 @@ router.post('/protocols', m.checkToken, m.setUser, protocols.create);
 router.get('/protocols/:id', m.checkToken, m.setUser, protocols.get);
 router.post('/protocols/:id', m.checkToken, m.setUser, protocols.update);
 router.delete('/protocols/:id', m.checkToken, m.setUser, protocols.destroy);
+router.get('/protocols/:id/exercises', m.checkToken, m.setUser, protocols.getAllExercises);
+router.get('/protocols/:id/sessions', m.checkToken, m.setUser, protocols.getAllSessions);
+
+// Exercises
+router.post('/exercises', m.checkToken, m.setUser, exercises.create);
+router.get('/exercises/:id', m.checkToken, m.setUser, exercises.get);
+router.post('/exercises/:id', m.checkToken, m.setUser, exercises.update);
+router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.delete);
+
+// Sessions
+router.post('/sessions', m.checkToken, m.setUser, sessions.create);
+router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
+router.post('/sessions/:id', m.checkToken, m.setUser, sessions.update);
+router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.delete);
 
 module.exports = router

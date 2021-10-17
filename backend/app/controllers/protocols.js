@@ -55,9 +55,39 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
+const getAllExercises = async (ctx) => {
+  const protocolId = parseInt(ctx.params.id);
+  const exercises = await prisma.exercise.findMany({
+    where: {
+      protocolId: protocolId
+    }
+  });
+
+  ctx.body = {
+    data: exercises
+  };
+  ctx.status = 200;
+}
+
+const getAllSessions = async (ctx) => {
+  const protocolId = parseInt(ctx.params.id);
+  const sessions = await prisma.session.findMany({
+    where: {
+      protocolId: protocolId
+    }
+  });
+
+  ctx.body = {
+    data: sessions
+  }
+  ctx.status = 200;
+}
+
 module.exports = {
   create,
   get,
   update,
-  destroy
-}
+  destroy,
+  getAllExercises,
+  getAllSessions
+};
