@@ -3,35 +3,35 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const create = async (ctx) => {
-  const session = await prisma.session.create({
+  const sessionFrame = await prisma.sessionFrame.create({
     data: {
       ...ctx.request.body
     }
   });
 
   ctx.body = {
-    data: session
+    data: sessionFrame
   };
   ctx.status = 200
 }
 
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const session = await prisma.session.findUnique({
+  const sessionFrame = await prisma.sessionFrame.findUnique({
     where: {
       id: id
     }
   });
 
   ctx.body = {
-    data: session
+    data: sessionFrame
   };
   ctx.status = 200;
 }
 
 const update = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const updateSession = await prisma.session.update({
+  const updateSessionFrame = await prisma.sessionFrame.update({
     where: {
       id: id
     },
@@ -39,14 +39,14 @@ const update = async (ctx) => {
   });
 
   ctx.body = {
-    data: updateSession
-  }
+    data: updateSessionFrame
+  };
   ctx.status = 200;
 }
 
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const session = await prisma.session.delete({
+  const sessionFrame = await prisma.sessionFrame.delete({
     where: {
       id: id
     }
@@ -55,24 +55,9 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
-const getAllSessionFrames = async (ctx) => {
-  const sessionId = parseInt(ctx.params.id);
-  const sessionFrames = await prisma.sessionFrame.findMany({
-    where: {
-      sessionId: sessionId
-    }
-  });
-
-  ctx.body = {
-    data: sessionFrames
-  };
-  ctx.status = 200;
-}
-
 module.exports = {
   create,
   get,
   update,
-  destroy,
-  getAllSessionFrames
+  destroy
 };

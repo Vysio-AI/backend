@@ -8,6 +8,7 @@ const signups = require('../controllers/signups');
 const protocols = require('../controllers/protocols');
 const exercises = require('../controllers/exercises');
 const sessions = require('../controllers/sessions');
+const sessionFrames = require('../controllers/session-frames');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -68,5 +69,12 @@ router.post('/sessions', m.checkToken, m.setUser, sessions.create);
 router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
 router.post('/sessions/:id', m.checkToken, m.setUser, sessions.update);
 router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.delete);
+router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.getAllSessionFrames);
+
+// Session Frames
+router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
+router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
+router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
+router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.delete);
 
 module.exports = router
