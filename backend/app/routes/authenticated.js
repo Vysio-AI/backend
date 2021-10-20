@@ -1,12 +1,14 @@
 const Router = require('@koa/router');
 
 // Import controllers
+const organizations = require('../controllers/organizations');
 const clients = require('../controllers/clients');
 const practitioners = require('../controllers/practitioners');
 const signups = require('../controllers/signups');
 const protocols = require('../controllers/protocols');
 const exercises = require('../controllers/exercises');
 const sessions = require('../controllers/sessions');
+const sessionFrames = require('../controllers/session-frames');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -15,6 +17,13 @@ const m = require('../middlewares/index');
 const router = Router({
   prefix: '/api/v1',
 });
+
+// Organizations
+router.get('/organizations', m.checkToken, m.setUser, organizations.index);
+router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
+router.patch('/organizations/:id', m.checkToken, m.setUser, organizations.update);
+router.delete('/organizations/:id', m.checkToken, m.setUser, organizations.destroy);
+router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, clients.getAllPractitioners)
 
 // Clients
 router.get('/clients', m.checkToken, m.setUser, clients.index);
@@ -53,12 +62,19 @@ router.get('/protocols/:id/sessions', m.checkToken, m.setUser, protocols.getAllS
 router.post('/exercises', m.checkToken, m.setUser, exercises.create);
 router.get('/exercises/:id', m.checkToken, m.setUser, exercises.get);
 router.post('/exercises/:id', m.checkToken, m.setUser, exercises.update);
-router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.delete);
+router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.destroy);
 
 // Sessions
 router.post('/sessions', m.checkToken, m.setUser, sessions.create);
 router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
 router.post('/sessions/:id', m.checkToken, m.setUser, sessions.update);
-router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.delete);
+router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.destroy);
+router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.getAllSessionFrames);
+
+// Session Frames
+router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
+router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
+router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
+router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
 
 module.exports = router

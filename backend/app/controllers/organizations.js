@@ -2,36 +2,45 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+const index = async (ctx) => {
+  const allOrganizations = await prisma.organization.findMany();
+
+  ctx.body = {
+    data: allOrganizations
+  };
+  ctx.status = 200;
+};
+
 const create = async (ctx) => {
-  const session = await prisma.session.create({
+  const organization = await prisma.organization.create({
     data: {
       ...ctx.request.body
     }
   });
 
   ctx.body = {
-    data: session
+    data: organization
   };
   ctx.status = 200
 }
 
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const session = await prisma.session.findUnique({
+  const organization = await prisma.organization.findUnique({
     where: {
       id: id
     }
   });
 
   ctx.body = {
-    data: session
+    data: organization
   };
   ctx.status = 200;
 }
 
 const update = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const updateSession = await prisma.session.update({
+  const updateOrganization = await prisma.organization.update({
     where: {
       id: id
     },
@@ -39,14 +48,14 @@ const update = async (ctx) => {
   });
 
   ctx.body = {
-    data: updateSession
-  }
+    data: updateOrganization
+  };
   ctx.status = 200;
 }
 
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const session = await prisma.session.delete({
+  const organization = await prisma.organization.delete({
     where: {
       id: id
     }
@@ -55,24 +64,25 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
-const getAllSessionFrames = async (ctx) => {
-  const sessionId = parseInt(ctx.params.id);
-  const sessionFrames = await prisma.sessionFrame.findMany({
+const getAllPractitioners = async (ctx) => {
+  const organizationId = parseInt(ctx.params.id);
+  const practitioners = await prisma.practitioner.findMany({
     where: {
-      sessionId: sessionId
+      organizationId: organizationId
     }
   });
 
   ctx.body = {
-    data: sessionFrames
+    data: practitioners
   };
   ctx.status = 200;
 }
 
 module.exports = {
+  index,
   create,
   get,
   update,
   destroy,
-  getAllSessionFrames
+  getAllPractitioners
 };
