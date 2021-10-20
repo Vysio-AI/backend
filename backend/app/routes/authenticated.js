@@ -1,6 +1,7 @@
 const Router = require('@koa/router');
 
 // Import controllers
+const organizations = require('../controllers/organizations');
 const clients = require('../controllers/clients');
 const practitioners = require('../controllers/practitioners');
 const signups = require('../controllers/signups');
@@ -15,6 +16,13 @@ const m = require('../middlewares/index');
 const router = Router({
   prefix: '/api/v1',
 });
+
+// Organizations
+router.get('/organizations', m.checkToken, m.setUser, organizations.index);
+router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
+router.patch('/organizations/:id', m.checkToken, m.setUser, organizations.update);
+router.delete('/organizations/:id', m.checkToken, m.setUser, organizations.destroy);
+router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, clients.getAllPractitioners)
 
 // Clients
 router.get('/clients', m.checkToken, m.setUser, clients.index);
