@@ -62,19 +62,19 @@ router.get('/protocols/:id/sessions', m.checkToken, m.setUser, protocols.getAllS
 router.post('/exercises', m.checkToken, m.setUser, exercises.create);
 router.get('/exercises/:id', m.checkToken, m.setUser, exercises.get);
 router.post('/exercises/:id', m.checkToken, m.setUser, exercises.update);
-router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.delete);
+router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.destroy);
 
 // Sessions
 router.post('/sessions', m.checkToken, m.setUser, sessions.create);
 router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
 router.post('/sessions/:id', m.checkToken, m.setUser, sessions.update);
-router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.delete);
+router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.destroy);
 router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.getAllSessionFrames);
 
 // Session Frames
 router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
 router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
 router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
-router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.delete);
+router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
 
 module.exports = router
