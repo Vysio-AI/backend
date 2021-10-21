@@ -6,7 +6,7 @@ const kafka = new Kafka({
 
 
 
-const setup = async () => {
+const setup = async (socketService) => {
   // Setup consumer
   const consumer = kafka.consumer({ groupId: 'vysio-backend1' });
 
@@ -19,8 +19,9 @@ const setup = async () => {
       console.log({
         value: message.value.toString(),
       })
+      socketService.emitter('sessionFrame:23423', message.value.toString());
     },
-  })
+  });
 }
 
 const sendMessage = async (topic, key, message) => {
