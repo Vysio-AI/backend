@@ -1,19 +1,6 @@
 version: '2.1'
 
 services:
-  backend:
-    build: ./backend
-    hostname: backend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-      - spark
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/postgres_db"
-      AUTH0_AUDIENCE: "https://api.vysio.ca"
-      AUTH0_DOMAIN: "https://petermarshall.us.auth0.com"
-      BROKER: "kafka1:19092"
   db:
     image: postgres
     restart: always

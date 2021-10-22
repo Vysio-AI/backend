@@ -1,10 +1,10 @@
 const { Kafka } = require('kafkajs')
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
-  brokers: ['kafka1:19092']
+  brokers: [process.env.BROKER]
 })
 
-
+const sessionFrames = require('../controllers/session-frames');
 
 const setup = async (socketService) => {
   // Setup consumer
@@ -16,10 +16,15 @@ const setup = async (socketService) => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log({
-        value: message.value.toString(),
-      })
-      socketService.emitter('sessionFrame:23423', message.value.toString());
+      // Parse json message
+      const jsonMsg = JSON.parse(message.value.toString());
+      console.log(jsonMsg);
+
+      // Emit to sessionFrame socket
+      socketService.emitter(`sessionFrame:${jsonMsg.session_id}`, jsonMsg);
+
+      // Persist to database
+      // TODO
     },
   });
 }

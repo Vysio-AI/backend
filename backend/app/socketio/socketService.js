@@ -13,16 +13,6 @@ class SocketService {
     this.io.on('connection', socket => {
       console.log("socket connection");
 
-      socket.on('startSession', (msg) => {
-        // Create session in DB
-        // Send back sessionID
-      })
-
-      socket.on('endSession', (msg) => {
-        // Update endtime of session
-        // Send back acknowledgement
-      })
-
       socket.on('message', (msg) => {
         let timestamp = new Date();
         timestamp = timestamp.toJSON();
@@ -48,7 +38,6 @@ class SocketService {
       this.io.emit(event, body);
     }
   }
-
 
 }
 
