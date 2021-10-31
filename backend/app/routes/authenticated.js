@@ -9,6 +9,7 @@ const protocols = require('../controllers/protocols');
 const exercises = require('../controllers/exercises');
 const sessions = require('../controllers/sessions');
 const sessionFrames = require('../controllers/session-frames');
+const video = require('../controllers/video');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -76,5 +77,8 @@ router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
 router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
 router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
 router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
+
+// Video
+router.get('/video/:id/signed-url', m.checkToken, m.setUser, video.getSignedUrl);
 
 module.exports = router
