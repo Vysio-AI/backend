@@ -29,6 +29,5 @@ If you use the docker-compose.yml within this repository to spin up the postgres
 
 pgadmin is accessible at: ```http://localhost:5050```
 
-
 ## Authentication
 We use Auth0 for user authentication. This API accepts Bearer tokens in the Authorization header, then validates them with Auth0 in a middleware. After a token has been validated, the API will try to find a user who the token belongs to. If the user already exists, the request will be executed within this context. If the user does not already exist, a new user will be created and the request will then be executed.

@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
+const kafka = require('../kafka/index');
 
 const create = async (ctx) => {
   const session = await prisma.session.create({
@@ -53,6 +54,27 @@ const destroy = async (ctx) => {
   });
 
   ctx.status = 204;
+}
+
+const end = async (ctx) => {
+  const id = parseInt(ctx.params.id);
+  const updateSession = await prisma.session.update({
+    where: {
+      id: id
+    },
+    data: {
+      endTime: Date.now()
+    }
+  });
+
+  kafka.sendMessage("session-end", "1", JSON.stringify({
+    session_id: id
+  }));
+
+  ctx.body = {
+    data: updateSession
+  }
+  ctx.status = 200;
 }
 
 const getAllSessionFrames = async (ctx) => {
