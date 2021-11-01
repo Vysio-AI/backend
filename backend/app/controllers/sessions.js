@@ -91,10 +91,25 @@ const getAllSessionFrames = async (ctx) => {
   ctx.status = 200;
 }
 
+const getAllFlags = async (ctx) => {
+  const sessionId = parseInt(ctx.params.id);
+  const flags = await prisma.flag.findMany({
+    where: {
+      sessionId: sessionId
+    }
+  });
+
+  ctx.body = {
+    data: flags
+  };
+  ctx.status = 200;
+}
+
 module.exports = {
   create,
   get,
   update,
   destroy,
-  getAllSessionFrames
+  getAllSessionFrames,
+  getAllFlags
 };

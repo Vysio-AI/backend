@@ -86,6 +86,7 @@ model Session {
   endTime       DateTime
   processed     Boolean
   sessionFrames SessionFrame[]
+  flags         Flag[]
   Protocol      Protocol       @relation(fields: [protocolId], references: [id])
   protocolId    Int
   video         Video?
@@ -101,6 +102,16 @@ model SessionFrame {
   Session    Session?  @relation(fields: [sessionId], references: [id])
   sessionId  Int?
   exerciseId Int
+}
+
+model Flag {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  time       DateTime
+  notes      String?
+  Session    Session?  @relation(fields: [sessionId], references: [id])
+  sessionId  Int?
 }
 
 model Video {
