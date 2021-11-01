@@ -1,8 +1,9 @@
 const { PrismaClient } = require('@prisma/client');
+const storage = require('../storage/index');
 
 const prisma = new PrismaClient();
 
-const getSignedUrl = async (ctx) => {
+const getReadSignedUrl = async (ctx) => {
   const id = parseInt(ctx.params.id);
   const video = await prisma.video.findUnique({
     where: {
@@ -10,15 +11,14 @@ const getSignedUrl = async (ctx) => {
     }
   });
 
-  // Authenticate video's url and return pre-signed url
-  const preSignedUrl = video.url
+  const readSignedUrl = await storage.generateReadSignedUrl(video.fileName);
 
   ctx.body = {
-    data: preSignedUrl
+    data: readSignedUrl
   }
   ctx.status = 200;
 }
 
 module.exports = {
-  getSignedUrl
+  getReadSignedUrl
 };

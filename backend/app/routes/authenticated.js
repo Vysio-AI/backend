@@ -79,6 +79,6 @@ router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update
 router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
 
 // Video
-router.get('/video/:id/signed-url', m.checkToken, m.setUser, video.getSignedUrl);
+router.get('/videos/:id/read-signed-url', m.checkToken, m.setUser, video.getReadSignedUrl);
 
 module.exports = router
