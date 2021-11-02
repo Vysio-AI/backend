@@ -13,32 +13,27 @@ class SocketService {
     this.io.on('connection', socket => {
       console.log("socket connection");
 
-      socket.on('startSession', (msg) => {
-        // Create session in DB
-        // Send back sessionID
-      })
-
-      socket.on('endSession', (msg) => {
-        // Update endtime of session
-        // Send back acknowledgement
-      })
-
       socket.on('message', (msg) => {
         let timestamp = new Date();
         timestamp = timestamp.toJSON();
 
         const testMessage = {
-          session_id: 2,
-          timestamp: timestamp,
-          a_x: 2.34,
-          a_y: 1.33,
-          a_z: 4.65,
-          w_x: 2.63,
-          w_y: 1.84,
-          w_z: 2.32,
+          "1": {
+            session_id: 2,
+            timestamp: timestamp,
+            a_x: 2.34,
+            a_y: 1.33,
+            a_z: 4.65,
+            w_x: 2.63,
+            w_y: 1.84,
+            w_z: 2.32,
+          }
         }
 
-        kafka.sendMessage('watch', "1", JSON.stringify(testMessage));
+        const key = Object.keys(testMessage)[0];
+        const value = JSON.stringify(testMessage[key]);
+
+        kafka.sendMessage(kafka.topics.WATCH, key, value);
       });
     });
   }
@@ -48,7 +43,6 @@ class SocketService {
       this.io.emit(event, body);
     }
   }
-
 
 }
 

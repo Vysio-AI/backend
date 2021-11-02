@@ -12,6 +12,7 @@ class KafkaTopic(Enum):
 
 
 schema = StructType([
+    StructField("session_id", StringType()),
     StructField("timestamp", TimestampType()),
     StructField("a_x", FloatType()),
     StructField("a_y", FloatType()),
@@ -42,7 +43,7 @@ df = spark \
     .withWatermark("timestamp", "10 second") \
     .groupBy(
         window("timestamp", "1 second"),
-        "user_id") \
+        "user_id", "session_id") \
     .agg(
         collect_list("a_x").alias("a_x"),
         collect_list("a_y").alias("a_y"),
@@ -51,7 +52,7 @@ df = spark \
         collect_list("w_y").alias("w_y"),
         collect_list("w_z").alias("w_z")) \
     .withColumn("classification", round(rand()*6)) \
-    .select("user_id", "window", "classification") \
+    .select("user_id", "session_id", "window", "classification") \
     .selectExpr("user_id AS key", "CAST(to_json(struct(*)) AS STRING) AS value") \
     .writeStream \
     .format("kafka") \

@@ -23,7 +23,7 @@ router.get('/organizations', m.checkToken, m.setUser, organizations.index);
 router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
 router.patch('/organizations/:id', m.checkToken, m.setUser, organizations.update);
 router.delete('/organizations/:id', m.checkToken, m.setUser, organizations.destroy);
-router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, clients.getAllPractitioners)
+router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, organizations.getAllPractitioners)
 
 // Clients
 router.get('/clients', m.checkToken, m.setUser, clients.index);
