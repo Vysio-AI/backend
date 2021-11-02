@@ -72,7 +72,6 @@ const setUser = async (ctx, next) => {
     ctx.userType = 'practitioner'
     ctx.practitioner = practitioner
   } else {
-    console.log('test')
     if (ctx.request.url != '/api/v1/clients/signup' && ctx.request.url != '/api/v1/practitioners/signup') {
       ctx.status = 401
     }

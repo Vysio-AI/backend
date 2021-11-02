@@ -9,6 +9,8 @@ const protocols = require('../controllers/protocols');
 const exercises = require('../controllers/exercises');
 const sessions = require('../controllers/sessions');
 const sessionFrames = require('../controllers/session-frames');
+const flags = require('../controllers/flags');
+const video = require('../controllers/video');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -70,11 +72,23 @@ router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
 router.post('/sessions/:id', m.checkToken, m.setUser, sessions.update);
 router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.destroy);
 router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.getAllSessionFrames);
+router.get('/sessions/:id/flags', m.checkToken, m.setUser, sessions.getAllFlags);
 
 // Session Frames
 router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
 router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
 router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
 router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
+
+// Flags
+router.post('/flags', m.checkToken, m.setUser, flags.create);
+router.get('/flags/:id', m.checkToken, m.setUser, flags.get);
+router.post('/flags/:id', m.checkToken, m.setUser, flags.update);
+router.delete('/flags/:id', m.checkToken, m.setUser, flags.destroy);
+
+// Video
+router.post('/videos', m.checkToken, m.setUser, video.create);
+router.get('/videos/:id', m.checkToken, m.setUser, video.get);
+router.delete('/videos/:id', m.checkToken, m.setUser, video.destroy);
 
 module.exports = router

@@ -1,6 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const prisma = require('./prisma-client');
 const kafka = require('../kafka/index');
 
 const create = async (ctx) => {
@@ -91,10 +89,25 @@ const getAllSessionFrames = async (ctx) => {
   ctx.status = 200;
 }
 
+const getAllFlags = async (ctx) => {
+  const sessionId = parseInt(ctx.params.id);
+  const flags = await prisma.flag.findMany({
+    where: {
+      sessionId: sessionId
+    }
+  });
+
+  ctx.body = {
+    data: flags
+  };
+  ctx.status = 200;
+}
+
 module.exports = {
   create,
   get,
   update,
   destroy,
-  getAllSessionFrames
+  getAllSessionFrames,
+  getAllFlags
 };
