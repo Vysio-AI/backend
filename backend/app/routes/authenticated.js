@@ -87,6 +87,8 @@ router.post('/flags/:id', m.checkToken, m.setUser, flags.update);
 router.delete('/flags/:id', m.checkToken, m.setUser, flags.destroy);
 
 // Video
-router.get('/videos/:id/read-signed-url', m.checkToken, m.setUser, video.getReadSignedUrl);
+router.post('/videos', m.checkToken, m.setUser, video.create);
+router.get('/videos/:id', m.checkToken, m.setUser, video.get);
+router.delete('/videos/:id', m.checkToken, m.setUser, video.destroy);
 
 module.exports = router

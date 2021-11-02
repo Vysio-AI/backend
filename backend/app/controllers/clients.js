@@ -1,6 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const prisma = require('./prisma-client');
 
 const index = async (ctx) => {
   const allClients = await prisma.client.findMany();
