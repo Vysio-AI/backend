@@ -1,5 +1,16 @@
 const prisma = require('./prisma-client');
 const kafka = require('../kafka/index');
+const client = require('../redis/index');
+
+const activityType = {
+  'PENDULUM': 0,
+  'ABDUCTION': 1,
+  'FORWARD_ELEVATION': 2,
+  'INTERNAL_ROTATION': 3,
+  'EXTERNAL_ROTATION': 4,
+  'TRAPEZIUS_EXTENSION': 5,
+  'UPRIGHT_ROW': 6
+};
 
 const create = async (ctx) => {
   const session = await prisma.session.create({
@@ -7,6 +18,22 @@ const create = async (ctx) => {
       ...ctx.request.body
     }
   });
+
+  const protocol = await prisma.protocol.findUnique({
+    where: {
+      id: session.protocolId
+    },
+    include: {
+      exercises: true
+    }
+  });
+
+  // Asynchronously add each exercise to redis
+  await client.connect();
+
+  await Promise.all(protocol.exercises.map(async (exercise) => {
+    await client.set(`${session.id}:${activityType[exercise.activityType]}`, exercise.activityType);
+  }));
 
   ctx.body = {
     data: session
@@ -65,6 +92,7 @@ const end = async (ctx) => {
     }
   });
 
+  // Send message to kafka to indicate session is complete
   kafka.sendMessage("session-end", "1", JSON.stringify({
     session_id: id
   }));

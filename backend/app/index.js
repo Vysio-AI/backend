@@ -10,6 +10,7 @@ const publicRouter = require('./routes/public');
 const middlewares = require("./middlewares/index");
 
 const kafka = require("./kafka/index");
+const redis = require("./redis/index");
 
 require('dotenv').config();
 
