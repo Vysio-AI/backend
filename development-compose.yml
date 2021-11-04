@@ -63,3 +63,11 @@ services:
       KAFKA_PORT: "19092"
     depends_on:
       - kafka1
+  redis:
+    image: "redis"
+    command: redis-server --requirepass "password"
+    restart: unless-stopped
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
