@@ -19,7 +19,7 @@ class SocketService {
 
         const testMessage = {
           "1": {
-            session_id: 2,
+            session_id: 18,
             timestamp: timestamp,
             a_x: 2.34,
             a_y: 1.33,

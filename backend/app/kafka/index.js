@@ -1,4 +1,6 @@
+const prisma = require('../controllers/prisma-client');
 const { Kafka } = require('kafkajs')
+const { client } = require('../redis/index');
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
   brokers: [process.env.BROKER]
@@ -44,10 +46,22 @@ const processClassifications = async (topic, partition, message, socketService) 
   console.log(jsonMsg);
 
   // Emit to sessionFrame socket
-  socketService.emitter(`sessionFrame:${jsonMsg.session_id}`, jsonMsg);
+  const exerciseId = await client.get(`${jsonMsg.session_id}:${jsonMsg.classification}`)
+  if (exerciseId) {
+    socketService.emitter(`sessionFrame:${jsonMsg.session_id}`, jsonMsg);
 
-  // Persist to database
-  // TODO
+    // Persist to database
+    const sessionFrame = await prisma.sessionFrame.create({
+      data: {
+        sessionId: Number(jsonMsg.session_id),
+        startTime: jsonMsg.window.start,
+        endTime: jsonMsg.window.end,
+        exerciseId: Number(exerciseId),
+      }
+    });
+    console.log(sessionFrame);
+  }
+  console.log("Activity not in protocol for this session")
 }
 
 const processSessionEnd = async (topic, partition, message, socketService) => {

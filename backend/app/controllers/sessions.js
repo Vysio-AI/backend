@@ -1,6 +1,6 @@
 const prisma = require('./prisma-client');
 const kafka = require('../kafka/index');
-const redis = require('../redis/index');
+const { client } = require('../redis/index');
 
 const activityType = {
   'PENDULUM': 0,
@@ -28,11 +28,8 @@ const create = async (ctx) => {
     }
   });
 
-  // Asynchronously add each exercise to redis
-  const client = await redis.connect();
-
   const results = await Promise.all(protocol.exercises.map(async (exercise) => {
-    return await client.set(`${session.id}:${activityType[exercise.activityType]}`, exercise.activityType);
+    return await client.set(`${session.id}:${activityType[exercise.activityType]}`, String(exercise.id));
   }));
 
   console.log(results);

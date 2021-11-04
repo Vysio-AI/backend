@@ -6,4 +6,11 @@ const client = redis.createClient({
   'password': process.env.REDIS_PASS,
 });
 
-module.exports = client;
+const setup = async () => {
+  await client.connect();
+}
+
+module.exports = {
+  client: client,
+  setup: setup,
+}

@@ -36,4 +36,7 @@ app.use(authenticatedRouter.routes());
 // Set up Kafka
 kafka.setup(socketService);
 
+// Set up redis
+redis.setup();
+
 httpServer.listen(3000);
