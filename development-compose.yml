@@ -53,7 +53,7 @@ services:
       - zoo1
 
   spark:
-    build: ./spark
+    image: peterdmarshall/vysio-spark:latest
     container_name: spark
     restart: always
     ports:

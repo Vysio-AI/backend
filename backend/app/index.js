@@ -23,7 +23,9 @@ const socketService = new SocketService(httpServer);
 
 app.use(logger());
 app.use(bodyParser());
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 
 // Apply global middlewares
 app.use(middlewares.catchError);

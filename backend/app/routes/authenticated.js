@@ -55,7 +55,7 @@ router.post('/clients/signup', m.checkToken, m.setUser, signups.signupClient);
 // Protocols
 router.post('/protocols', m.checkToken, m.setUser, protocols.create);
 router.get('/protocols/:id', m.checkToken, m.setUser, protocols.get);
-router.post('/protocols/:id', m.checkToken, m.setUser, protocols.update);
+router.patch('/protocols/:id', m.checkToken, m.setUser, protocols.update);
 router.delete('/protocols/:id', m.checkToken, m.setUser, protocols.destroy);
 router.get('/protocols/:id/exercises', m.checkToken, m.setUser, protocols.getAllExercises);
 router.get('/protocols/:id/sessions', m.checkToken, m.setUser, protocols.getAllSessions);
@@ -63,13 +63,13 @@ router.get('/protocols/:id/sessions', m.checkToken, m.setUser, protocols.getAllS
 // Exercises
 router.post('/exercises', m.checkToken, m.setUser, exercises.create);
 router.get('/exercises/:id', m.checkToken, m.setUser, exercises.get);
-router.post('/exercises/:id', m.checkToken, m.setUser, exercises.update);
+router.patch('/exercises/:id', m.checkToken, m.setUser, exercises.update);
 router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.destroy);
 
 // Sessions
 router.post('/sessions', m.checkToken, m.setUser, sessions.create);
 router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
-router.post('/sessions/:id', m.checkToken, m.setUser, sessions.update);
+router.patch('/sessions/:id', m.checkToken, m.setUser, sessions.update);
 router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.destroy);
 router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.getAllSessionFrames);
 router.get('/sessions/:id/flags', m.checkToken, m.setUser, sessions.getAllFlags);
@@ -77,7 +77,7 @@ router.get('/sessions/:id/flags', m.checkToken, m.setUser, sessions.getAllFlags)
 // Session Frames
 router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
 router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
-router.post('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
+router.patch('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
 router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
 
 // Flags

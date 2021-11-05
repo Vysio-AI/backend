@@ -10,7 +10,7 @@ const create = async (ctx) => {
 
   // Get upload signed URL for file associated with video object
   const uploadSignedUrl = {
-    'uploadSignedUrl': await storage.generateUploadSignedUrl(video.fileName)
+    'uploadSignedUrl': await storage.generateUploadSignedUrl(video.fileName, 'write')
   };
 
   ctx.body = {

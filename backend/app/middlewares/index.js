@@ -23,7 +23,7 @@ const catchError = async (ctx, next) => {
         status: ctx.status
       }
     } else if (status === 401) {
-      console.log('Unauthorized', err, ctx);
+      console.log('Unauthorized', ctx);
       ctx.body = {
         errors: "Unauthorized",
         status: ctx.status,
