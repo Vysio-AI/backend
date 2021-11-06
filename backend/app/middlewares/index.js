@@ -65,18 +65,26 @@ const setUser = async (ctx, next) => {
     }
   });
 
+  console.log("Request: " + ctx.request.url);
+
   if (client != null) {
     ctx.userType = 'client'
     ctx.client = client
+    await next(ctx);
   } else if (practitioner != null) {
     ctx.userType = 'practitioner'
     ctx.practitioner = practitioner
+    await next(ctx);
   } else {
-    if (ctx.request.url != '/api/v1/clients/signup' && ctx.request.url != '/api/v1/practitioners/signup') {
-      ctx.status = 401
+    console.log("request: " + ctx.request.url);
+    if (ctx.request.url == '/api/v1/clients/signup' || 
+        ctx.request.url == '/api/v1/practitioners/signup' ||
+        ctx.request.url == '/api/v1/signup-status') {
+      await next(ctx);
+    } else {
+      ctx.status = 401;
     }
   }
-  await next(ctx);
 }
 
 module.exports = {

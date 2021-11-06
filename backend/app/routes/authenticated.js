@@ -20,6 +20,9 @@ const router = Router({
   prefix: '/api/v1',
 });
 
+// Signup status
+router.get('/signup-status', m.checkToken, m.setUser, signups.signupStatus);
+
 // Organizations
 router.get('/organizations', m.checkToken, m.setUser, organizations.index);
 router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
@@ -67,6 +70,7 @@ router.patch('/exercises/:id', m.checkToken, m.setUser, exercises.update);
 router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.destroy);
 
 // Sessions
+router.get('/sessions', m.checkToken, m.setUser, sessions.index);
 router.post('/sessions', m.checkToken, m.setUser, sessions.create);
 router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
 router.patch('/sessions/:id', m.checkToken, m.setUser, sessions.update);

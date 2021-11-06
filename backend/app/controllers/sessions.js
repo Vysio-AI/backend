@@ -1,6 +1,19 @@
 const prisma = require('./prisma-client');
 const kafka = require('../kafka/index');
 
+const index = async (ctx) => {
+  const sessions = await prisma.session.findMany({
+    where: {
+      clientId: ctx.client.id
+    }
+  });
+
+  ctx.body = {
+    data: sessions
+  }
+  ctx.status = 200
+}
+
 const create = async (ctx) => {
   const session = await prisma.session.create({
     data: {
@@ -104,6 +117,7 @@ const getAllFlags = async (ctx) => {
 }
 
 module.exports = {
+  index,
   create,
   get,
   update,
