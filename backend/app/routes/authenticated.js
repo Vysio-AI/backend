@@ -1,16 +1,18 @@
 const Router = require('@koa/router');
 
 // Import controllers
-const organizations = require('../controllers/organizations');
-const clients = require('../controllers/clients');
-const practitioners = require('../controllers/practitioners');
-const signups = require('../controllers/signups');
-const protocols = require('../controllers/protocols');
-const exercises = require('../controllers/exercises');
-const sessions = require('../controllers/sessions');
-const sessionFrames = require('../controllers/session-frames');
-const flags = require('../controllers/flags');
-const video = require('../controllers/video');
+const {
+  signups,
+  organizations,
+  clients,
+  practitioners,
+  protocols,
+  exercises,
+  sessions,
+  sessionFrames,
+  flags,
+  videos
+} = require('../controllers/main');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -91,8 +93,8 @@ router.post('/flags/:id', m.checkToken, m.setUser, flags.update);
 router.delete('/flags/:id', m.checkToken, m.setUser, flags.destroy);
 
 // Video
-router.post('/videos', m.checkToken, m.setUser, video.create);
-router.get('/videos/:id', m.checkToken, m.setUser, video.get);
-router.delete('/videos/:id', m.checkToken, m.setUser, video.destroy);
+router.post('/videos', m.checkToken, m.setUser, videos.create);
+router.get('/videos/:id', m.checkToken, m.setUser, videos.get);
+router.delete('/videos/:id', m.checkToken, m.setUser, videos.destroy);
 
 module.exports = router

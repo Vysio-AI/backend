@@ -1,23 +1,5 @@
-const prisma = require('./prisma-client');
-const storage = require('../storage/index');
-
-const create = async (ctx) => {
-  const video = await prisma.video.create({
-    data: {
-      ...ctx.request.body
-    }
-  });
-
-  // Get upload signed URL for file associated with video object
-  const uploadSignedUrl = {
-    'uploadSignedUrl': await storage.generateUploadSignedUrl(video.fileName)
-  };
-
-  ctx.body = {
-    data: {...video, ...uploadSignedUrl}
-  }
-  ctx.status = 200;
-}
+const prisma = require('../prisma-client');
+const storage = require('../../storage/index');
 
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
@@ -53,7 +35,6 @@ const destroy = async (ctx) => {
 }
 
 module.exports = {
-  create,
   get,
   destroy,
 };

@@ -1,5 +1,4 @@
-const prisma = require('./prisma-client');
-const kafka = require('../kafka/index');
+const prisma = require('../prisma-client');
 
 const index = async (ctx) => {
   const sessions = await prisma.session.findMany({
@@ -15,8 +14,10 @@ const index = async (ctx) => {
 }
 
 const create = async (ctx) => {
+  console.log(ctx.request.body);
   const session = await prisma.session.create({
     data: {
+      clientId: ctx.client.id,
       ...ctx.request.body
     }
   });
@@ -65,27 +66,6 @@ const destroy = async (ctx) => {
   });
 
   ctx.status = 204;
-}
-
-const end = async (ctx) => {
-  const id = parseInt(ctx.params.id);
-  const updateSession = await prisma.session.update({
-    where: {
-      id: id
-    },
-    data: {
-      endTime: Date.now()
-    }
-  });
-
-  kafka.sendMessage("session-end", "1", JSON.stringify({
-    session_id: id
-  }));
-
-  ctx.body = {
-    data: updateSession
-  }
-  ctx.status = 200;
 }
 
 const getAllSessionFrames = async (ctx) => {

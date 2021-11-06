@@ -4,7 +4,7 @@ const kafka = new Kafka({
   brokers: [process.env.BROKER]
 })
 
-const sessionFrames = require('../controllers/session-frames');
+const sessionFrames = require('../controllers/client/session-frames');
 
 const topics = {
   CLASSIFICATIONS: "classifications",

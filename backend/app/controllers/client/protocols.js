@@ -1,4 +1,4 @@
-const prisma = require('./prisma-client');
+const prisma = require('../prisma-client');
 
 const create = async (ctx) => {
   const protocol = await prisma.protocol.create({

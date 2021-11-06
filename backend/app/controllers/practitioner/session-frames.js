@@ -1,35 +1,35 @@
-const prisma = require('./prisma-client');
+const prisma = require('../prisma-client');
 
 const create = async (ctx) => {
-  const exercise = await prisma.exercise.create({
+  const sessionFrame = await prisma.sessionFrame.create({
     data: {
       ...ctx.request.body
     }
   });
 
   ctx.body = {
-    data: exercise
+    data: sessionFrame
   };
   ctx.status = 200
 }
 
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const exercise = await prisma.exercise.findUnique({
+  const sessionFrame = await prisma.sessionFrame.findUnique({
     where: {
       id: id
     }
   });
 
   ctx.body = {
-    data: exercise
+    data: sessionFrame
   };
   ctx.status = 200;
 }
 
 const update = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const updateExercise = await prisma.exercise.update({
+  const updateSessionFrame = await prisma.sessionFrame.update({
     where: {
       id: id
     },
@@ -37,14 +37,14 @@ const update = async (ctx) => {
   });
 
   ctx.body = {
-    data: updateExercise
-  }
+    data: updateSessionFrame
+  };
   ctx.status = 200;
 }
 
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const exercise = await prisma.exercise.delete({
+  const sessionFrame = await prisma.sessionFrame.delete({
     where: {
       id: id
     }

@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 
 // Import controllers
-const app = require('../controllers/app');
+const app = require('../controllers/app/app');
 
 // Define root
 const router = Router({
