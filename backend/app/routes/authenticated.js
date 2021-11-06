@@ -30,17 +30,18 @@ router.get('/organizations', m.checkToken, m.setUser, organizations.index);
 router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
 router.patch('/organizations/:id', m.checkToken, m.setUser, organizations.update);
 router.delete('/organizations/:id', m.checkToken, m.setUser, organizations.destroy);
-router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, organizations.getAllPractitioners)
+router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, organizations.getAllPractitioners);
 
 // Clients
 router.get('/clients', m.checkToken, m.setUser, clients.index);
 router.get('/clients/:id', m.checkToken, m.setUser, clients.get);
 router.patch('/clients/:id', m.checkToken, m.setUser, clients.update);
 router.delete('/clients/:id', m.checkToken, m.setUser, clients.destroy);
-router.get('/clients/:id/protocols', m.checkToken, m.setUser, clients.getAllProtocols)
+router.get('/clients/:id/protocols', m.checkToken, m.setUser, clients.getAllProtocols);
+router.get('/clients/:id/sessions', m.checkToken, m.setUser, clients.getAllSessions);
 
 // Practitioners
-router.get('/practitioners', m.checkToken, m.setUser, practitioners.index)
+router.get('/practitioners', m.checkToken, m.setUser, practitioners.index);
 router.get('/practitioners/:id', m.checkToken, m.setUser, practitioners.get);
 router.patch('/practitioners/:id', m.checkToken, m.setUser, practitioners.update);
 router.delete('/practitioners/:id', m.checkToken, m.setUser, practitioners.destroy);

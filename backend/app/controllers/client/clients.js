@@ -86,6 +86,20 @@ const getAllProtocols = async (ctx) => {
   ctx.status = 200;
 }
 
+const getAllSessions = async (ctx) => {
+  const clientId = parseInt(ctx.params.id);
+  const sessions = await prisma.session.findMany({
+    where: {
+      clientId: clientId
+    }
+  });
+
+  ctx.body = {
+    data: sessions
+  }
+  ctx.status = 200;
+}
+
 module.exports = {
   index,
   get,
@@ -93,5 +107,6 @@ module.exports = {
   destroy,
   getNotificationSettings,
   updateNotificationSettings,
-  getAllProtocols
+  getAllProtocols,
+  getAllSessions,
 };

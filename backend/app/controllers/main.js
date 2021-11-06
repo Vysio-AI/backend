@@ -83,6 +83,13 @@ module.exports = {
         practitionersController.clients.getAllProtocols,
       )
     },
+    getAllSessions: async function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        clientsController.clients.getAllSessions,
+        practitionersController.clients.getAllSessions
+      )
+    },
     getNotificationSettings: async function(ctx) {
       return callUserTypeFunction(
         ctx,
