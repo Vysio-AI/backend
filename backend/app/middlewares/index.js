@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { userType } = require('../access-control');
 
 const prisma = new PrismaClient();
 const jwt = require('koa-jwt');
@@ -68,11 +69,11 @@ const setUser = async (ctx, next) => {
   console.log("Request: " + ctx.request.url);
 
   if (client != null) {
-    ctx.userType = 'client'
+    ctx.userType = userType.CLIENT;
     ctx.client = client
     await next(ctx);
   } else if (practitioner != null) {
-    ctx.userType = 'practitioner'
+    ctx.userType = userType.PRACTITIONER;
     ctx.practitioner = practitioner
     await next(ctx);
   } else {
