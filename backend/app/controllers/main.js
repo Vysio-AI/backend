@@ -94,14 +94,14 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.clients.getNotificationSettings,
-        practitionersController.clients.getNotificationSettings,
+        null,
       )
     },
     updateNotificationSettings: async function(ctx) {
       return callUserTypeFunction(
         ctx,
         clientsController.clients.updateNotificationSettings,
-        practitionersController.clients.updateNotificationSettings,
+        null,
       )
     }
   },
