@@ -1,16 +1,18 @@
 const Router = require('@koa/router');
 
 // Import controllers
-const organizations = require('../controllers/organizations');
-const clients = require('../controllers/clients');
-const practitioners = require('../controllers/practitioners');
-const signups = require('../controllers/signups');
-const protocols = require('../controllers/protocols');
-const exercises = require('../controllers/exercises');
-const sessions = require('../controllers/sessions');
-const sessionFrames = require('../controllers/session-frames');
-const flags = require('../controllers/flags');
-const video = require('../controllers/video');
+const {
+  signups,
+  organizations,
+  clients,
+  practitioners,
+  protocols,
+  exercises,
+  sessions,
+  sessionFrames,
+  flags,
+  videos
+} = require('../controllers/main');
 
 // Import middlewares
 const m = require('../middlewares/index');
@@ -20,22 +22,26 @@ const router = Router({
   prefix: '/api/v1',
 });
 
+// Signup status
+router.get('/signup-status', m.checkToken, m.setUser, signups.signupStatus);
+
 // Organizations
 router.get('/organizations', m.checkToken, m.setUser, organizations.index);
 router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
 router.patch('/organizations/:id', m.checkToken, m.setUser, organizations.update);
 router.delete('/organizations/:id', m.checkToken, m.setUser, organizations.destroy);
-router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, organizations.getAllPractitioners)
+router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, organizations.getAllPractitioners);
 
 // Clients
 router.get('/clients', m.checkToken, m.setUser, clients.index);
 router.get('/clients/:id', m.checkToken, m.setUser, clients.get);
 router.patch('/clients/:id', m.checkToken, m.setUser, clients.update);
 router.delete('/clients/:id', m.checkToken, m.setUser, clients.destroy);
-router.get('/clients/:id/protocols', m.checkToken, m.setUser, clients.getAllProtocols)
+router.get('/clients/:id/protocols', m.checkToken, m.setUser, clients.getAllProtocols);
+router.get('/clients/:id/sessions', m.checkToken, m.setUser, clients.getAllSessions);
 
 // Practitioners
-router.get('/practitioners', m.checkToken, m.setUser, practitioners.index)
+router.get('/practitioners', m.checkToken, m.setUser, practitioners.index);
 router.get('/practitioners/:id', m.checkToken, m.setUser, practitioners.get);
 router.patch('/practitioners/:id', m.checkToken, m.setUser, practitioners.update);
 router.delete('/practitioners/:id', m.checkToken, m.setUser, practitioners.destroy);
@@ -67,6 +73,7 @@ router.patch('/exercises/:id', m.checkToken, m.setUser, exercises.update);
 router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.destroy);
 
 // Sessions
+router.get('/sessions', m.checkToken, m.setUser, sessions.index);
 router.post('/sessions', m.checkToken, m.setUser, sessions.create);
 router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
 router.patch('/sessions/:id', m.checkToken, m.setUser, sessions.update);
@@ -87,8 +94,8 @@ router.post('/flags/:id', m.checkToken, m.setUser, flags.update);
 router.delete('/flags/:id', m.checkToken, m.setUser, flags.destroy);
 
 // Video
-router.post('/videos', m.checkToken, m.setUser, video.create);
-router.get('/videos/:id', m.checkToken, m.setUser, video.get);
-router.delete('/videos/:id', m.checkToken, m.setUser, video.destroy);
+router.post('/videos', m.checkToken, m.setUser, videos.create);
+router.get('/videos/:id', m.checkToken, m.setUser, videos.get);
+router.delete('/videos/:id', m.checkToken, m.setUser, videos.destroy);
 
 module.exports = router

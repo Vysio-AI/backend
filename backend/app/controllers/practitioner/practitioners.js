@@ -1,43 +1,43 @@
-const prisma = require('./prisma-client');
+const prisma = require('../prisma-client');
 
 const index = async (ctx) => {
-  const allClients = await prisma.client.findMany();
+  const allPractitioners = await prisma.practitioner.findMany();
   ctx.body = {
-    data: allClients
+    data: allPractitioners
   };
   ctx.status = 200;
 };
 
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const client = await prisma.client.findUnique({
+  const practitioner = await prisma.practitioner.findUnique({
     where: {
       id: id
     }
   });
   ctx.body = {
-    data: client
+    data: practitioner
   };
   ctx.status = 200;
 }
 
 const update = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const updateClient = await prisma.client.update({
+  const updatePractitioner = await prisma.practitioner.update({
     where: {
       id: id
     },
     data: ctx.request.body
   });
   ctx.body = {
-    data: updateClient
+    data: updatePractitioner
   }
   ctx.status = 200;
 }
 
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const client = await prisma.client.delete({
+  const practitioner = await prisma.practitioner.delete({
     where: {
       id: id
     }
@@ -45,11 +45,24 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
+const getAllClients = async (ctx) => {
+  const practitionerId = parseInt(ctx.params.id);
+  const clients = await prisma.client.findMany({
+    where: {
+      practitionerId: practitionerId
+    }
+  });
+  ctx.body = {
+    data: clients
+  }
+  ctx.status = 200;
+}
+
 const getNotificationSettings = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const settings = await prisma.clientNotificationSettings.findUnique({
+  const settings = await prisma.practitionerNotificationSettings.findUnique({
     where: {
-      clientId: id
+      practitionerId: id
     }
   });
   ctx.body = {
@@ -60,9 +73,9 @@ const getNotificationSettings = async (ctx) => {
 
 const updateNotificationSettings = async (ctx) => {
   const id = parseInt(ctx.params.id);
-  const updateSettings = await prisma.clientNotificationSettings.update({
+  const updateSettings = await prisma.practitionerNotificationSettings.update({
     where: {
-      clientId: id
+      practitionerId: id
     },
     data: ctx.request.body
   });
@@ -72,26 +85,12 @@ const updateNotificationSettings = async (ctx) => {
   ctx.status = 200;
 }
 
-const getAllProtocols = async (ctx) => {
-  const userId = parseInt(ctx.params.id);
-  const protocols = await prisma.protocol.findMany({
-    where: {
-      userId: userId
-    }
-  });
-
-  ctx.body = {
-    data: protocols
-  };
-  ctx.status = 200;
-}
-
 module.exports = {
   index,
   get,
   update,
   destroy,
+  getAllClients,
   getNotificationSettings,
   updateNotificationSettings,
-  getAllProtocols
 };

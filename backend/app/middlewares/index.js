@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { userType } = require('../access-control');
 
 const prisma = new PrismaClient();
 const jwt = require('koa-jwt');
@@ -65,18 +66,26 @@ const setUser = async (ctx, next) => {
     }
   });
 
+  console.log("Request: " + ctx.request.url);
+
   if (client != null) {
-    ctx.userType = 'client'
+    ctx.userType = userType.CLIENT;
     ctx.client = client
+    await next(ctx);
   } else if (practitioner != null) {
-    ctx.userType = 'practitioner'
+    ctx.userType = userType.PRACTITIONER;
     ctx.practitioner = practitioner
+    await next(ctx);
   } else {
-    if (ctx.request.url != '/api/v1/clients/signup' && ctx.request.url != '/api/v1/practitioners/signup') {
-      ctx.status = 401
+    console.log("request: " + ctx.request.url);
+    if (ctx.request.url == '/api/v1/clients/signup' || 
+        ctx.request.url == '/api/v1/practitioners/signup' ||
+        ctx.request.url == '/api/v1/signup-status') {
+      await next(ctx);
+    } else {
+      ctx.status = 401;
     }
   }
-  await next(ctx);
 }
 
 module.exports = {

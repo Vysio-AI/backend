@@ -72,6 +72,7 @@ model Client {
   lastName             String
   phoneNumber          String?
   auth0Sub             String                      @unique
+  sessions             Session[]
   protocols            Protocol[]
   Practitioner         Practitioner?               @relation(fields: [practitionerId], references: [id])
   practitionerId       Int?
@@ -79,17 +80,19 @@ model Client {
 }
 
 model Session {
-  id            Int            @id @default(autoincrement())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  startTime     DateTime
-  endTime       DateTime?
-  processed     Boolean        @default(false)
-  sessionFrames SessionFrame[]
-  flags         Flag[]
-  Protocol      Protocol       @relation(fields: [protocolId], references: [id])
-  protocolId    Int
-  video         Video?
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  startTime      DateTime
+  endTime        DateTime?
+  processed      Boolean        @default(false)
+  sessionFrames  SessionFrame[]
+  flags          Flag[]
+  Client         Client      @relation(fields: [clientId], references: [id])
+  clientId       Int
+  protocolId     Int
+  practitionerId Int?
+  video          Video?
 }
 
 model SessionFrame {
@@ -154,7 +157,6 @@ model Protocol {
   completionFrequency Frequency
   Client              Client     @relation(fields: [clientId], references: [id])
   clientId            Int
-  sessions            Session[]
   exercises           Exercise[]
 }
 

@@ -1,4 +1,4 @@
-const prisma = require('./prisma-client');
+const prisma = require('../prisma-client');
 
 const create = async (ctx) => {
   const sessionFrame = await prisma.sessionFrame.create({
