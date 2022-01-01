@@ -6,7 +6,7 @@ on:
       - main
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: vysio/backend
+  IMAGE_NAME: Vysio-AI/backend
 
 jobs:
   build-and-push-image:
