@@ -1,8 +1,8 @@
-name: Docker-GCP
+name: Push Backend GCR
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
