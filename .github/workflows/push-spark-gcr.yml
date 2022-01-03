@@ -1,0 +1,25 @@
+name: Push Spark GCR
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup gcloud
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }} 
+        project_id: ${{ secrets.GCP_PROJECT_ID }} 
+
+    - name: Configure docker for GCP
+      run: gcloud auth configure-docker
+
+    - name: Build docker image
+      run:  docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/vysio-spark:latest ./spark
+
+    - name: Push to Google Container Registry
+      run:  docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/vysio-spark:latest 
