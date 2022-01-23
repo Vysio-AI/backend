@@ -4,6 +4,8 @@ ENV PYSPARK_MAJOR_PYTHON_VERSION=3
 
 WORKDIR /opt/application
 
+RUN chmod 0777 /opt/application
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
