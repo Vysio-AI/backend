@@ -1,27 +1,3 @@
-function stringValidationFn (value) {
-  return typeof(value) === "string"
-}
-
-function intValidationFn (value) {
-  return Number.isInteger(value)
-}
-
-function completionFrequencyValidationFn (value) {
-  return (typeof(value) === "string" && ["E1D", "E2D", "E7D"].includes(value))
-}
-
-/*
- * The TypeValidator data structure maps an identifying data type to be 
- * included in a request body to the function that validates it. The
- * validation function must take in a single argument (the value it's
- * validating) and return a boolean indicating the value's validity.
- */
-const TypeValidator = {
-  STRING: stringValidationFn,
-  INT: intValidationFn,
-  COMPLETION_FREQUENCY: completionFrequencyValidationFn,
-}
-
 /*
  * The RequestStructure class is a collection of RequestParameter's that
  * encapsulates the expected structure of data included in the request.
@@ -32,14 +8,19 @@ class RequestStructure {
   }
 
   validate(requestBody) {
+    let isValid = true
     let errorObj = {}
+
+    // Check validity of each parameter in request structure
     for (const param of this.params) {
-      const errorMessage = param.validate(requestBody)
-      if (errorMessage) {
-        errorObj[param.name] = errorMessage
+      const [paramIsValid, paramErrorMessage] = param.validate(requestBody)
+      if (!paramIsValid) {
+        isValid = false
+        errorObj[param.name] = paramErrorMessage
       }
     }
-    return errorObj
+
+    return [isValid, errorObj]
   }
 }
 
@@ -60,17 +41,24 @@ class RequestParameter {
 
       // Check if request parameter is required
       if (this.isRequired) {
-        return "Required parameter missing from the request body JSON"
+        return [false, "Required parameter missing from the request body JSON"]
       } else {
-        return
+        return [true, null]
       }
     } else {
       const requestParamVal = requestBody[this.name]
 
       // Check validity of request parameter value
       if (!this.typeValidator(requestParamVal)) {
-        return `Invalid value: ${requestParamVal}`
+        return [false, `Invalid value: ${requestParamVal}`]
+      } else {
+        return [true, null]
       }
     }
   }
+}
+
+module.exports = {
+  RequestStructure,
+  RequestParameter,
 }
