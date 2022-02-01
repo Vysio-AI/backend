@@ -90,7 +90,7 @@ const setUser = async (ctx, next) => {
 }
 
 const validateRequest = async (ctx, next) => {
-  if (!routeRequestStructures.hasOwnProperty(ctx._matchedRoute)) {
+  if (!requestStructures.hasOwnProperty(ctx._matchedRoute)) {
     console.log(`Request structure undefined for route '${ctx.request.url}'`);
     await next(ctx);
   } else {
