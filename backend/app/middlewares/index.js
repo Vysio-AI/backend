@@ -90,14 +90,12 @@ const setUser = async (ctx, next) => {
 }
 
 const validateRequest = async (ctx, next) => {
-  if (!requestStructures.hasOwnProperty(ctx._matchedRoute)) {
-    console.log(`Request structure undefined for route '${ctx.request.url}'`);
+  const requestStructure = requestStructures?.[ctx._matchedRoute]?.[ctx.request.method]
+
+  if (!requestStructure) {
+    console.log(`Request structure undefined for method '${ctx.request.method}' at route '${ctx._matchedRoute}'`);
     await next(ctx);
   } else {
-    // TODO: Figure out a better way to configure
-    // This won't work since we have the same matched route doing different
-    // things based on the request type
-    const requestStructure = requestStructures[ctx._matchedRoute]
     const [isValid, errorObj] = requestStructure.validate(ctx.request.body)
 
     if (!isValid) {
