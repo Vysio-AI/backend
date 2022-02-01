@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const { userType } = require('../access-control');
+const requestStructures = require('../request-validation/request-structures');
 
 const prisma = new PrismaClient();
 const jwt = require('koa-jwt');
@@ -88,8 +89,31 @@ const setUser = async (ctx, next) => {
   }
 }
 
+const validateRequest = async (ctx, next) => {
+  const requestStructure = requestStructures?.[ctx._matchedRoute]?.[ctx.request.method]
+
+  if (!requestStructure) {
+    console.log(`Request structure undefined for method '${ctx.request.method}' at route '${ctx._matchedRoute}'`);
+    await next(ctx);
+  } else {
+    const [isValid, errorObj] = requestStructure.validate(ctx.request.body)
+
+    if (!isValid) {
+      ctx.body = {
+        errors: "Bad Request",
+        status: 400,
+        error: errorObj
+      }
+      ctx.status = 400;
+    } else {
+      await next(ctx);
+    }
+  }
+}
+
 module.exports = {
   catchError,
   checkToken,
   setUser,
+  validateRequest,
 }
