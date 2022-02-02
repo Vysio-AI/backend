@@ -18,9 +18,11 @@ const signupPractitioner = async (ctx) => {
 const signupStatus = async (ctx) => {
   if(ctx.userType && (ctx.client || ctx.practitioner)) {
     console.log("Signed up");
+    const id = ctx.client ? ctx.client.id : ctx.practitioner.id
     ctx.body = {
+      id: id,
       signedUp: true,
-      type: ctx.userType
+      type: ctx.userType,
     }
     ctx.status = 200;
   } else {
