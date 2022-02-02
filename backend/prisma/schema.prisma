@@ -10,44 +10,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Organization {
-  id            Int            @id @default(autoincrement())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  name          String
-  email         String?        @unique
-  phoneNumber   String?
-  address       String?
-  country       String?        @default("Canada")
-  province      String?
-  city          String?
-  streetAddress String?
-  postalCode    String?
-  imageUrl      String?
-  accessCode    Int
-  practitioners Practitioner[]
-}
-
-model PractitionerNotificationSettings {
-  id             Int          @id @default(autoincrement())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  email          Boolean      @default(false)
-  sms            Boolean      @default(false)
-  Practitioner   Practitioner @relation(fields: [practitionerId], references: [id])
-  practitionerId Int          @unique
-}
-
-model ClientNotificationSettings {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     Boolean  @default(false)
-  sms       Boolean  @default(false)
-  Client    Client   @relation(fields: [clientId], references: [id])
-  clientId  Int      @unique
-}
-
 model Practitioner {
   id                   Int                               @id @default(autoincrement())
   createdAt            DateTime                          @default(now())
@@ -58,9 +20,7 @@ model Practitioner {
   phoneNumber          String?
   auth0Sub             String                            @unique
   clients              Client[]
-  notificationSettings PractitionerNotificationSettings?
-  Organization         Organization?                     @relation(fields: [organizationId], references: [id])
-  organizationId       Int?
+  plans                Plan[]
 }
 
 model Client {
@@ -73,10 +33,9 @@ model Client {
   phoneNumber          String?
   auth0Sub             String                      @unique
   sessions             Session[]
-  protocols            Protocol[]
+  plans                Plan[]
   Practitioner         Practitioner?               @relation(fields: [practitionerId], references: [id])
   practitionerId       Int?
-  notificationSettings ClientNotificationSettings?
 }
 
 model Session {
@@ -90,7 +49,7 @@ model Session {
   flags          Flag[]
   Client         Client      @relation(fields: [clientId], references: [id])
   clientId       Int
-  protocolId     Int
+  planId         Int
   practitionerId Int?
   video          Video?
 }
@@ -142,31 +101,29 @@ model Exercise {
   updatedAt     DateTime       @updatedAt
   activityType  ActivityType
   duration      BigInt
-  Protocol      Protocol?      @relation(fields: [protocolId], references: [id])
-  protocolId    Int?
+  Plan     Plan?      @relation(fields: [planId], references: [id])
+  planId    Int?
   sessionFrames SessionFrame[]
 }
 
-model Protocol {
+model Plan {
   id                  Int        @id @default(autoincrement())
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
   active              Boolean    @default(false)
   activatedAt         DateTime?
   deactivatedAt       DateTime?
-  completionFrequency Frequency
-  Client              Client     @relation(fields: [clientId], references: [id])
-  clientId            Int
+  repetitions         Int
+  timeframe           TimeFrame
+  Practitioner        Practitioner     @relation(fields: [practitionerId], references: [id])
+  practitionerId      Int
+  clients             Client[]
   exercises           Exercise[]
 }
 
-enum Frequency {
-  E1D
-  E2D
-  E3D
-  E4D
-  E5D
-  E6D
-  E7D
-  E14D
+enum TimeFrame {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
 }

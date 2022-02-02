@@ -15,9 +15,9 @@ const get = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: client
-  };
+  delete client.auth0Sub;
+
+  ctx.body = client;
   ctx.status = 200;
 }
 
@@ -37,9 +37,9 @@ const update = async (ctx) => {
     data: ctx.request.body
   });
 
-  ctx.body = {
-    data: updateClient
-  }
+  delete updateClient.auth0Sub;
+
+  ctx.body = updateClient;
   ctx.status = 200;
 }
 
@@ -52,7 +52,7 @@ const destroy = async (ctx) => {
     return
   }
 
-  const client = await prisma.client.delete({
+  await prisma.client.delete({
     where: {
       id: clientId
     }
@@ -61,48 +61,7 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
-const getNotificationSettings = async (ctx) => {
-  const clientId = parseInt(ctx.params.id);
-
-  // Check client is the client making request
-  if (ctx.client.id != clientId) {
-    ctx.status = 401;
-    return
-  }
-
-  const settings = await prisma.clientNotificationSettings.findUnique({
-    where: {
-      clientId: clientId
-    }
-  });
-
-  ctx.body = {
-    data: settings
-  }
-  ctx.status = 200;
-}
-
-const updateNotificationSettings = async (ctx) => {
-  const id = parseInt(ctx.params.id);
-
-  // Check client is the client making request
-  if (ctx.client.id != id) {
-    ctx.status = 401;
-  }
-
-  const updateSettings = await prisma.clientNotificationSettings.update({
-    where: {
-      clientId: id
-    },
-    data: ctx.request.body
-  });
-  ctx.body = {
-    data: updateSettings
-  }
-  ctx.status = 200;
-}
-
-const getAllProtocols = async (ctx) => {
+const getAllPlans = async (ctx) => {
   const clientId = parseInt(ctx.params.id);
 
   // Check client is the client making request
@@ -114,17 +73,21 @@ const getAllProtocols = async (ctx) => {
   const limit = parseInt(ctx.params.limit);
   const offset = parseInt(ctx.params.offset);
 
-  const protocols = await prisma.protocol.findMany({
-    take: limit,
-    skip: offset,
+  const client = await prisma.client.findUnique({
     where: {
-      clientId: clientId
+      id: clientId
     }
   });
 
-  ctx.body = {
-    data: protocols
-  };
+  const plans = await prisma.plan.findMany({
+    take: limit,
+    skip: offset,
+    where: {
+      id: { in: client.plans }
+    }
+  });
+
+  ctx.body = plans;
   ctx.status = 200;
 }
 
@@ -148,9 +111,7 @@ const getAllSessions = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: sessions
-  }
+  ctx.body = sessions;
   ctx.status = 200;
 }
 
@@ -158,8 +119,6 @@ module.exports = {
   get,
   update,
   destroy,
-  getNotificationSettings,
-  updateNotificationSettings,
-  getAllProtocols,
+  getAllPlans,
   getAllSessions,
 };

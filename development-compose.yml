@@ -52,14 +52,15 @@ services:
     depends_on:
       - zoo1
 
-  spark:
-    image: peterdmarshall/vysio-spark:latest
-    container_name: spark
-    restart: always
-    ports:
-      - "4040:4040"
-    environment:
-      KAFKA_HOST: "kafka1"
-      KAFKA_PORT: "19092"
-    depends_on:
-      - kafka1
+  # Uncomment to test spark in dev. Not required to run backend stack.
+  # spark:
+  #   image: peterdmarshall/vysio-spark:latest
+  #   container_name: spark
+  #   restart: always
+  #   ports:
+  #     - "4040:4040"
+  #   environment:
+  #     KAFKA_HOST: "kafka1"
+  #     KAFKA_PORT: "19092"
+  #   depends_on:
+  #     - kafka1

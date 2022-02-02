@@ -8,14 +8,11 @@ const index = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: sessions
-  }
+  ctx.body = sessions;
   ctx.status = 200
 }
 
 const create = async (ctx) => {
-  console.log(ctx.request.body);
   const session = await prisma.session.create({
     data: {
       clientId: ctx.client.id,
@@ -23,9 +20,7 @@ const create = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: session
-  };
+  ctx.body = session;
   ctx.status = 200
 }
 
@@ -37,9 +32,7 @@ const get = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: session
-  };
+  ctx.body = session;
   ctx.status = 200;
 }
 
@@ -52,9 +45,7 @@ const update = async (ctx) => {
     data: ctx.request.body
   });
 
-  ctx.body = {
-    data: updateSession
-  }
+  ctx.body = updateSession;
   ctx.status = 200;
 }
 
@@ -83,29 +74,49 @@ const destroy = async (ctx) => {
 
 const getAllSessionFrames = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
+
+  const session = await prisma.sessionFrame.findUnique({
+    where: {
+      id: sessionId
+    }
+  })
+
+  if (session.clientId != ctx.client.id) {
+    ctx.status = 401;
+    return
+  }
+
   const sessionFrames = await prisma.sessionFrame.findMany({
     where: {
       sessionId: sessionId
     }
   });
 
-  ctx.body = {
-    data: sessionFrames
-  };
+  ctx.body = sessionFrames;
   ctx.status = 200;
 }
 
 const getAllFlags = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
+
+  const session = await prisma.session.findUnique({
+    where: {
+      id: sessionId
+    }
+  })
+
+  if (session.clientId != ctx.client.id) {
+    ctx.status = 401;
+    return
+  }
+
   const flags = await prisma.flag.findMany({
     where: {
       sessionId: sessionId
     }
   });
 
-  ctx.body = {
-    data: flags
-  };
+  ctx.body = flags;
   ctx.status = 200;
 }
 

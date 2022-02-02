@@ -13,9 +13,12 @@ const index = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: allClients
-  };
+  allClients = allClients.map(client => {
+    delete client.auth0Sub;
+    return client
+  })
+
+  ctx.body = allClients;
   ctx.status = 200;
 };
 
@@ -36,9 +39,9 @@ const get = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: client
-  };
+  delete client.auth0Sub;
+
+  ctx.body = client;
   ctx.status = 200;
 }
 
@@ -60,9 +63,7 @@ const update = async (ctx) => {
     data: ctx.request.body
   });
 
-  ctx.body = {
-    data: updateClient
-  }
+  ctx.body = updateClient;
   ctx.status = 200;
 }
 
@@ -77,7 +78,7 @@ const destroy = async (ctx) => {
     return
   }
 
-  const client = await prisma.client.delete({
+  await prisma.client.delete({
     where: {
       id: clientId
     }
@@ -86,7 +87,7 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
-const getAllProtocols = async (ctx) => {
+const getAllPlans = async (ctx) => {
   const clientId = parseInt(ctx.params.id);
 
   // Check client is associated with practitioner making request
@@ -100,7 +101,7 @@ const getAllProtocols = async (ctx) => {
   const limit = parseInt(ctx.params.limit);
   const offset = parseInt(ctx.params.offset);
 
-  const protocols = await prisma.protocol.findMany({
+  const plans = await prisma.plan.findMany({
     take: limit,
     skip: offset,
     where: {
@@ -108,9 +109,7 @@ const getAllProtocols = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: protocols
-  };
+  ctx.body = plans;
   ctx.status = 200;
 }
 
@@ -122,6 +121,7 @@ const getAllSessions = async (ctx) => {
     client.id != clientId
   })) {
     ctx.status = 401;
+    return
   }
 
   const limit = parseInt(ctx.params.limit);
@@ -135,9 +135,7 @@ const getAllSessions = async (ctx) => {
     }
   });
 
-  ctx.body = {
-    data: sessions
-  }
+  ctx.body = sessions;
   ctx.status = 200;
 }
 
@@ -146,6 +144,6 @@ module.exports = {
   get,
   update,
   destroy,
-  getAllProtocols,
+  getAllPlans,
   getAllSessions,
 };

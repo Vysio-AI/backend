@@ -13,9 +13,7 @@ const create = async (ctx) => {
     'uploadSignedUrl': await storage.generateUploadSignedUrl(video.fileName)
   };
 
-  ctx.body = {
-    data: {...video, ...uploadSignedUrl}
-  }
+  ctx.body = {...video, ...uploadSignedUrl}
   ctx.status = 200;
 }
 
@@ -32,9 +30,7 @@ const get = async (ctx) => {
     'readSignedUrl': await storage.generateReadSignedUrl(video.fileName)
   };
 
-  ctx.body = {
-    data: {...video, ...readSignedUrl}
-  }
+  ctx.body = {...video, ...readSignedUrl}
   ctx.status = 200;
 }
 
