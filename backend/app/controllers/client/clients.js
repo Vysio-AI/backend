@@ -15,6 +15,8 @@ const get = async (ctx) => {
     }
   });
 
+  delete client.auth0Sub;
+
   ctx.body = client;
   ctx.status = 200;
 }
@@ -35,6 +37,8 @@ const update = async (ctx) => {
     data: ctx.request.body
   });
 
+  delete updateClient.auth0Sub;
+
   ctx.body = updateClient;
   ctx.status = 200;
 }
@@ -48,7 +52,7 @@ const destroy = async (ctx) => {
     return
   }
 
-  const client = await prisma.client.delete({
+  await prisma.client.delete({
     where: {
       id: clientId
     }

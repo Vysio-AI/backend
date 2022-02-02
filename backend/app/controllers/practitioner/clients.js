@@ -13,6 +13,11 @@ const index = async (ctx) => {
     }
   });
 
+  allClients = allClients.map(client => {
+    delete client.auth0Sub;
+    return client
+  })
+
   ctx.body = allClients;
   ctx.status = 200;
 };
@@ -33,6 +38,8 @@ const get = async (ctx) => {
       id: clientId
     }
   });
+
+  delete client.auth0Sub;
 
   ctx.body = client;
   ctx.status = 200;

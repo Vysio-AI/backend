@@ -7,6 +7,9 @@ const get = async (ctx) => {
       id: id
     }
   });
+
+  delete practitioner.auth0Sub;
+
   ctx.body = practitioner;
   ctx.status = 200;
 }

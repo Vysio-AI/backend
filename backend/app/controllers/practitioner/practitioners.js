@@ -1,3 +1,4 @@
+const { practitioner } = require('../prisma-client');
 const prisma = require('../prisma-client');
 
 const get = async (ctx) => {
@@ -13,6 +14,8 @@ const get = async (ctx) => {
       id: id
     }
   });
+
+  delete practitioner.auth0Sub;
 
   ctx.body = practitioner;
   ctx.status = 200;
@@ -32,6 +35,8 @@ const update = async (ctx) => {
     },
     data: ctx.request.body
   });
+
+  delete practitioner.auth0Sub
 
   ctx.body = updatePractitioner;
   ctx.status = 200;
