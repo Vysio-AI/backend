@@ -65,10 +65,7 @@ router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.get
 router.get('/sessions/:id/flags', m.checkToken, m.setUser, sessions.getAllFlags);
 
 // Session Frames
-router.post('/session-frames', m.checkToken, m.setUser, sessionFrames.create);
 router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
-router.patch('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.update);
-router.delete('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.destroy);
 
 // Flags
 router.post('/flags', m.checkToken, m.setUser, flags.create);

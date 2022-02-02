@@ -203,13 +203,6 @@ module.exports = {
     }
   },
   sessionFrames: {
-    create: function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.sessionFrames.create,
-        null,
-      )
-    },
     get: function(ctx) {
       return callUserTypeFunction(
         ctx,
@@ -217,20 +210,6 @@ module.exports = {
         practitionersController.sessionFrames.get,
       )
     },
-    update: function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.sessionFrames.update,
-        null,
-      )
-    },
-    destroy: function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.sessionFrames.destroy,
-        null,
-      )
-    }
   },
   flags: {
     create: function(ctx) {
