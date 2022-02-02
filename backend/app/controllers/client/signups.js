@@ -12,18 +12,6 @@ const signupClient = async (ctx) => {
   ctx.status = 200;
 }
 
-const signupPractitioner = async (ctx) => {
-  const practitioner = await prisma.practitioner.create({
-    data: {
-      ...ctx.request.body,
-      auth0Sub: ctx.state.user.sub,
-    }
-  });
-
-  ctx.body = practitioner;
-  ctx.status = 200;
-}
-
 // Ping this endpoint to check the signup status of the current user
 // Returns an object with user type (client || practitioner) if the user
 // is signed up, as well as sign up status.
@@ -31,18 +19,14 @@ const signupStatus = async (ctx) => {
   if(ctx.userType && (ctx.client || ctx.practitioner)) {
     console.log("Signed up");
     ctx.body = {
-      data: {
-        signedUp: true,
-        type: ctx.userType
-      }
+      signedUp: true,
+      type: ctx.userType
     }
     ctx.status = 200;
   } else {
     console.log("Not signed up");
     ctx.body = {
-      data: {
-        signedUp: false
-      }
+      signedUp: false
     }
     ctx.status = 200;
   }
@@ -50,6 +34,5 @@ const signupStatus = async (ctx) => {
 
 module.exports = {
   signupClient,
-  signupPractitioner,
   signupStatus,
 };

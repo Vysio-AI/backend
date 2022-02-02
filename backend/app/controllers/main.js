@@ -42,8 +42,8 @@ module.exports = {
     getAllPlans: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.clients.getAllplans,
-        practitionersController.clients.getAllplans,
+        clientsController.clients.getAllPlans,
+        practitionersController.clients.getAllPlans,
       )
     },
     getAllSessions: async function(ctx) {
@@ -58,7 +58,7 @@ module.exports = {
     get: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        null,
+        clientsController.practitioners.get,
         practitionersController.practitioners.get,
       )
     },
@@ -95,14 +95,14 @@ module.exports = {
     update: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.plans.update,
+        null,
         practitionersController.plans.update,
       )
     },
     destroy: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.plans.destroy,
+        null,
         practitionersController.plans.destroy,
       )
     },

@@ -9,11 +9,7 @@ const get = async (ctx) => {
     return
   }
 
-  const practitioner = await prisma.practitioner.findUnique({
-    where: {
-      id: id
-    }
-  });
+  const practitioner = ctx.practitioner;
 
   delete practitioner.auth0Sub;
 
