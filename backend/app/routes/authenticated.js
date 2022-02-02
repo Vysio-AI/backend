@@ -3,10 +3,9 @@ const Router = require('@koa/router');
 // Import controllers
 const {
   signups,
-  organizations,
   clients,
   practitioners,
-  protocols,
+  plans,
   exercises,
   sessions,
   sessionFrames,
@@ -25,19 +24,12 @@ const router = Router({
 // Signup status
 router.get('/signup-status', m.checkToken, m.setUser, signups.signupStatus);
 
-// Organizations
-router.get('/organizations', m.checkToken, m.setUser, organizations.index);
-router.get('/organizations/:id', m.checkToken, m.setUser, organizations.get);
-router.patch('/organizations/:id', m.checkToken, m.setUser, organizations.update);
-router.delete('/organizations/:id', m.checkToken, m.setUser, organizations.destroy);
-router.get('/organizations/:id/practitioners', m.checkToken, m.setUser, organizations.getAllPractitioners);
-
 // Clients
 router.get('/clients', m.checkToken, m.setUser, clients.index);
 router.get('/clients/:id', m.checkToken, m.setUser, clients.get);
 router.patch('/clients/:id', m.checkToken, m.setUser, clients.update);
 router.delete('/clients/:id', m.checkToken, m.setUser, clients.destroy);
-router.get('/clients/:id/protocols', m.checkToken, m.setUser, clients.getAllProtocols);
+router.get('/clients/:id/plans', m.checkToken, m.setUser, clients.getAllPlans);
 router.get('/clients/:id/sessions', m.checkToken, m.setUser, clients.getAllSessions);
 
 // Practitioners
@@ -47,24 +39,17 @@ router.patch('/practitioners/:id', m.checkToken, m.setUser, practitioners.update
 router.delete('/practitioners/:id', m.checkToken, m.setUser, practitioners.destroy);
 router.get('/practitioners/:id/clients', m.checkToken, m.setUser, practitioners.getAllClients);
 
-// Notification settings
-router.get('/practitioners/:id/notification-settings', m.checkToken, m.setUser, practitioners.getNotificationSettings);
-router.patch('/practitioners/:id/notification-settings', m.checkToken, m.setUser, practitioners.updateNotificationSettings);
-
-router.get('/clients/:id/notification-settings', m.checkToken, m.setUser, clients.getNotificationSettings);
-router.patch('/clients/:id/notification-settings', m.checkToken, m.setUser, clients.updateNotificationSettings);
-
 // Signups
 router.post('/practitioners/signup', m.checkToken, m.setUser, signups.signupPractitioner);
 router.post('/clients/signup', m.checkToken, m.setUser, signups.signupClient);
 
-// Protocols
-router.post('/protocols', m.checkToken, m.setUser, protocols.create);
-router.get('/protocols/:id', m.checkToken, m.setUser, protocols.get);
-router.patch('/protocols/:id', m.checkToken, m.setUser, protocols.update);
-router.delete('/protocols/:id', m.checkToken, m.setUser, protocols.destroy);
-router.get('/protocols/:id/exercises', m.checkToken, m.setUser, protocols.getAllExercises);
-router.get('/protocols/:id/sessions', m.checkToken, m.setUser, protocols.getAllSessions);
+// plans
+router.post('/plans', m.checkToken, m.setUser, plans.create);
+router.get('/plans/:id', m.checkToken, m.setUser, plans.get);
+router.patch('/plans/:id', m.checkToken, m.setUser, plans.update);
+router.delete('/plans/:id', m.checkToken, m.setUser, plans.destroy);
+router.get('/plans/:id/exercises', m.checkToken, m.setUser, plans.getAllExercises);
+router.get('/plans/:id/sessions', m.checkToken, m.setUser, plans.getAllSessions);
 
 // Exercises
 router.post('/exercises', m.checkToken, m.setUser, exercises.create);

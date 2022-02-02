@@ -1,61 +1,29 @@
 const prisma = require('../prisma-client');
 
-const create = async (ctx) => {
-  const flag = await prisma.flag.create({
-    data: {
-      ...ctx.request.body
-    }
-  });
-
-  ctx.body = {
-    data: flag
-  };
-  ctx.status = 200
-}
-
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
+
   const flag = await prisma.flag.findUnique({
     where: {
       id: id
     }
   });
 
-  ctx.body = {
-    data: flag
-  };
-  ctx.status = 200;
-}
-
-const update = async (ctx) => {
-  const id = parseInt(ctx.params.id);
-  const updateFlag = await prisma.flag.update({
+  const session = await prisma.session.findUnique({
     where: {
-      id: id
-    },
-    data: ctx.request.body
-  });
-
-  ctx.body = {
-    data: updateFlag
-  }
-  ctx.status = 200;
-}
-
-const destroy = async (ctx) => {
-  const id = parseInt(ctx.params.id);
-  const flag = await prisma.flag.delete({
-    where: {
-      id: id
+      id: flag.sessionId
     }
   });
 
-  ctx.status = 204;
+  if (session.practitionerId != ctx.practitioner.id) {
+    ctx.status = 401;
+    return
+  }
+
+  ctx.body = flag
+  ctx.status = 200;
 }
 
 module.exports = {
-  create,
   get,
-  update,
-  destroy,
 };

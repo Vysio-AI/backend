@@ -1,45 +1,40 @@
 const prisma = require('../prisma-client');
 const storage = require('../../storage/index');
 
+
+// Get all sessions for all clients
 const index = async (ctx) => {
-  const sessions = await prisma.session.findMany({
+  const clients = await prisma.client.findMany({
     where: {
-      clientId: ctx.client.id
+      practitionerId: ctx.practitioner.id
+    },
+    include: {
+      sessions: true
     }
   });
 
-  ctx.body = {
-    data: sessions
-  }
-  ctx.status = 200
-}
-
-const create = async (ctx) => {
-  console.log(ctx.request.body);
-  const session = await prisma.session.create({
-    data: {
-      clientId: ctx.client.id,
-      ...ctx.request.body
-    }
+  // Flatmap returns a new array formed by applying a given
+  // callback function to each element of the array, then
+  // flattening the result by one level
+  const sessions = clients.flatMap(client => {
+    return client.sessions
   });
 
-  ctx.body = {
-    data: session
-  };
+  ctx.body = sessions;
   ctx.status = 200
 }
 
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
+
   const session = await prisma.session.findUnique({
     where: {
-      id: id
+      id: id,
+      practitionerId: ctx.practitioner.id
     }
   });
 
-  ctx.body = {
-    data: session
-  };
+  ctx.body = session;
   ctx.status = 200;
 }
 
@@ -47,19 +42,29 @@ const update = async (ctx) => {
   const id = parseInt(ctx.params.id);
   const updateSession = await prisma.session.update({
     where: {
-      id: id
+      id: id,
+      practitionerId: ctx.practitioner.id
     },
     data: ctx.request.body
   });
 
-  ctx.body = {
-    data: updateSession
-  }
+  ctx.body = updateSession;
   ctx.status = 200;
 }
 
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
+
+  const session = await prisma.session.findUnique({
+    where: {
+      id: id
+    }
+  });
+
+  if (session.practitionerId != ctx.practitioner.id) {
+    ctx.status = 401
+    return
+  }
 
   // Delete video
   const video = await prisma.video.delete({
@@ -83,35 +88,54 @@ const destroy = async (ctx) => {
 
 const getAllSessionFrames = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
+
+  const session = await prisma.session.findUnique({
+    where: {
+      id: id
+    }
+  });
+
+  if (session.practitionerId != ctx.practitioner.id) {
+    ctx.status = 401
+    return
+  }
+
   const sessionFrames = await prisma.sessionFrame.findMany({
     where: {
       sessionId: sessionId
     }
   });
 
-  ctx.body = {
-    data: sessionFrames
-  };
+  ctx.body = sessionFrames;
   ctx.status = 200;
 }
 
 const getAllFlags = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
+
+  const session = await prisma.session.findUnique({
+    where: {
+      id: id
+    }
+  });
+
+  if (session.practitionerId != ctx.practitioner.id) {
+    ctx.status = 401
+    return
+  }
+
   const flags = await prisma.flag.findMany({
     where: {
       sessionId: sessionId
     }
   });
 
-  ctx.body = {
-    data: flags
-  };
+  ctx.body = flags;
   ctx.status = 200;
 }
 
 module.exports = {
   index,
-  create,
   get,
   update,
   destroy,

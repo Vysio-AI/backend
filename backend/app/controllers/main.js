@@ -10,43 +10,6 @@ module.exports = {
     signupPractitioner: practitionersController.signups.signupPractitioner,
     signupClient: clientsController.signups.signupClient
   },
-  organizations: {
-    index: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        null,
-        practitionersController.organizations.index,
-      )
-    },
-    get: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        null,
-        practitionersController.organizations.get,
-      )
-    },
-    update: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        null,
-        practitionersController.organizations.update,
-      )
-    },
-    destroy: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        null,
-        practitionersController.organizations.destroy,
-      )
-    },
-    getAllPractitioners: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        null,
-        practitionersController.organizations.getAllPractitioners,
-      )
-    }
-  },
   clients: {
     index: async function(ctx) {
       return callUserTypeFunction(
@@ -76,11 +39,11 @@ module.exports = {
         practitionersController.clients.destroy,
       )
     },
-    getAllProtocols: async function(ctx) {
+    getAllPlans: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.clients.getAllProtocols,
-        practitionersController.clients.getAllProtocols,
+        clientsController.clients.getAllplans,
+        practitionersController.clients.getAllplans,
       )
     },
     getAllSessions: async function(ctx) {
@@ -90,113 +53,71 @@ module.exports = {
         practitionersController.clients.getAllSessions
       )
     },
-    getNotificationSettings: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.clients.getNotificationSettings,
-        null,
-      )
-    },
-    updateNotificationSettings: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.clients.updateNotificationSettings,
-        null,
-      )
-    }
   },
   practitioners: {
-    index: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.practitioners.index,
-        practitionersController.practitioners.index,
-      )
-    },
     get: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.practitioners.get,
+        null,
         practitionersController.practitioners.get,
       )
     },
     update: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.practitioners.update,
+        null,
         practitionersController.practitioners.update,
       )
     },
     destroy: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.practitioners.destroy,
+        null,
         practitionersController.practitioners.destroy,
       )
     },
-    getAllClients: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.practitioners.getAllClients,
-        practitionersController.practitioners.getAllClients,
-      )
-    },
-    getNotificationSettings: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.practitioners.getNotificationSettings,
-        practitionersController.practitioners.getNotificationSettings,
-      )
-    },
-    updateNotificationSettings: async function(ctx) {
-      return callUserTypeFunction(
-        ctx,
-        clientsController.practitioners.updateNotificationSettings,
-        practitionersController.practitioners.updateNotificationSettings,
-      )
-    }
   },
-  protocols: {
+  plans: {
     create: async function(ctx) {
       return callUserTypeFunction(
         ctx,
         null,
-        practitionersController.protocols.create,
+        practitionersController.plans.create,
       )
     },
     get: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.protocols.get,
-        practitionersController.protocols.get,
+        clientsController.plans.get,
+        practitionersController.plans.get,
       )
     },
     update: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.protocols.update,
-        practitionersController.protocols.update,
+        clientsController.plans.update,
+        practitionersController.plans.update,
       )
     },
     destroy: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.protocols.destroy,
-        practitionersController.protocols.destroy,
+        clientsController.plans.destroy,
+        practitionersController.plans.destroy,
       )
     },
     getAllExercises: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.protocols.getAllExercises,
-        practitionersController.protocols.getAllExercises,
+        clientsController.plans.getAllExercises,
+        practitionersController.plans.getAllExercises,
       )
     },
     getAllSessions: async function(ctx) {
       return callUserTypeFunction(
         ctx,
-        clientsController.protocols.getAllSessions,
-        practitionersController.protocols.getAllSessions,
+        clientsController.plans.getAllSessions,
+        practitionersController.plans.getAllSessions,
       )
     }
   },
@@ -286,7 +207,7 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.sessionFrames.create,
-        practitionersController.sessionFrames.create,
+        null,
       )
     },
     get: function(ctx) {
@@ -300,14 +221,14 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.sessionFrames.update,
-        practitionersController.sessionFrames.update,
+        null,
       )
     },
     destroy: function(ctx) {
       return callUserTypeFunction(
         ctx,
         clientsController.sessionFrames.destroy,
-        practitionersController.sessionFrames.destroy,
+        null,
       )
     }
   },
@@ -316,7 +237,7 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.flags.create,
-        practitionersController.flags.create,
+        null,
       )
     },
     get: function(ctx) {
@@ -330,14 +251,14 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.flags.update,
-        practitionersController.flags.update,
+        null,
       )
     },
     destroy: function(ctx) {
       return callUserTypeFunction(
         ctx,
         clientsController.flags.destroy,
-        practitionersController.flags.destroy,
+        null,
       )
     }
   },
@@ -346,7 +267,7 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.videos.create,
-        practitionersController.videos.create,
+        null,
       )
     },
     get: function(ctx) {
@@ -360,7 +281,7 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.videos.destroy,
-        practitionersController.videos.destroy,
+        null,
       )
     }
   }

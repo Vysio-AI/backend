@@ -1,7 +1,6 @@
 const prisma = require('../prisma-client');
 
 const signupClient = async (ctx) => {
-  console.log(ctx.request.body);
   const client = await prisma.client.create({
     data: {
       ...ctx.request.body,
@@ -9,15 +8,7 @@ const signupClient = async (ctx) => {
     }
   });
 
-  const settings = await prisma.clientNotificationSettings.create({
-    data: {
-      clientId: client.id
-    }
-  });
-
-  ctx.body = {
-    data: client
-  };
+  ctx.body = client;
   ctx.status = 200;
 }
 
@@ -29,15 +20,7 @@ const signupPractitioner = async (ctx) => {
     }
   });
 
-  const settings = await prisma.practitionerNotificationSettings.create({
-    data: {
-      practitionerId: practitioner.id
-    }
-  });
-
-  ctx.body = {
-    data: practitioner
-  };
+  ctx.body = practitioner;
   ctx.status = 200;
 }
 
