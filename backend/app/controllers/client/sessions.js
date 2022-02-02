@@ -52,15 +52,23 @@ const update = async (ctx) => {
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
 
-  // Delete video
-  const video = await prisma.video.delete({
+  const video = await prisma.video.findUnique({
     where: {
       sessionId: id
     }
-  });
+  })
 
-  // Delete file from Google Cloud Storage
-  await storage.deleteVideoFile(video.fileName);
+  if (video) {
+    // Delete video
+    await prisma.video.delete({
+      where: {
+        sessionId: id
+      }
+    });
+
+    // Delete file from Google Cloud Storage
+    await storage.deleteVideoFile(video.fileName);
+  }
 
   // Delete session
   await prisma.session.delete({
