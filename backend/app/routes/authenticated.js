@@ -33,11 +33,9 @@ router.get('/clients/:id/plans', m.checkToken, m.setUser, clients.getAllPlans);
 router.get('/clients/:id/sessions', m.checkToken, m.setUser, clients.getAllSessions);
 
 // Practitioners
-router.get('/practitioners', m.checkToken, m.setUser, practitioners.index);
 router.get('/practitioners/:id', m.checkToken, m.setUser, practitioners.get);
 router.patch('/practitioners/:id', m.checkToken, m.setUser, practitioners.update);
 router.delete('/practitioners/:id', m.checkToken, m.setUser, practitioners.destroy);
-router.get('/practitioners/:id/clients', m.checkToken, m.setUser, practitioners.getAllClients);
 
 // Signups
 router.post('/practitioners/signup', m.checkToken, m.setUser, signups.signupPractitioner);
