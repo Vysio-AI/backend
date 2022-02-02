@@ -3,7 +3,7 @@ const prisma = require('../prisma-client');
 const get = async (ctx) => {
   const id = parseInt(ctx.params.id);
 
-  const session = await prisma.sessionFrame.findUnique({
+  const session = await prisma.session.findUnique({
     where: {
       id: ctx.request.body.sessionId
     }

@@ -99,7 +99,7 @@ const getAllSessionFrames = async (ctx) => {
 const getAllFlags = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
 
-  const session = await prisma.sessionFrame.findUnique({
+  const session = await prisma.session.findUnique({
     where: {
       id: sessionId
     }
