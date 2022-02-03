@@ -20,7 +20,7 @@ const signupStatus = async (ctx) => {
     console.log("Signed up");
     const id = ctx.userType == "client" ? ctx.client.id : ctx.practitioner.id
     ctx.body = {
-      userId: id,
+      id: id,
       signedUp: true,
       type: ctx.userType,
     }
