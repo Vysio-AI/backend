@@ -69,6 +69,35 @@ const requestStructures = {
     ),
     'DELETE': new RequestStructure()
   },
+  '/api/v1/sessions': {
+    'GET': new RequestStructure(),
+    'POST': new RequestStructure(
+      new RequestParameter('startTime', TypeValidator.DATE_TIME, true),
+      new RequestParameter('endTime', TypeValidator.DATE_TIME, false),
+      new RequestParameter('processed', TypeValidator.BOOLEAN, true),
+      new RequestParameter('clientId', TypeValidator.INT, true),
+      new RequestParameter('planId', TypeValidator.INT, true),
+      new RequestParameter('practitionerId', TypeValidator.INT, false),
+    ),
+  },
+  '/api/v1/sessions/:id': {
+    'GET': new RequestStructure(),
+    'PATCH': new RequestStructure(
+      new RequestParameter('startTime', TypeValidator.DATE_TIME, false),
+      new RequestParameter('endTime', TypeValidator.DATE_TIME, false),
+      new RequestParameter('processed', TypeValidator.BOOLEAN, false),
+      new RequestParameter('clientId', TypeValidator.INT, false),
+      new RequestParameter('planId', TypeValidator.INT, false),
+      new RequestParameter('practitionerId', TypeValidator.INT, false),
+    ),
+    'DELETE': new RequestStructure(),
+  },
+  '/api/v1/sessions/:id/session-frames': {
+    'GET': new RequestStructure(),
+  },
+  '/api/v1/sessions/:id/flags': {
+    'GET': new RequestStructure(),
+  },
 }
 
 module.exports = requestStructures;

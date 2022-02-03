@@ -56,13 +56,13 @@ router.patch('/exercises/:id', m.checkToken, m.setUser, m.validateRequest, exerc
 router.delete('/exercises/:id', m.checkToken, m.setUser, m.validateRequest, exercises.destroy);
 
 // Sessions
-router.get('/sessions', m.checkToken, m.setUser, sessions.index);
-router.post('/sessions', m.checkToken, m.setUser, sessions.create);
-router.get('/sessions/:id', m.checkToken, m.setUser, sessions.get);
-router.patch('/sessions/:id', m.checkToken, m.setUser, sessions.update);
-router.delete('/sessions/:id', m.checkToken, m.setUser, sessions.destroy);
-router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, sessions.getAllSessionFrames);
-router.get('/sessions/:id/flags', m.checkToken, m.setUser, sessions.getAllFlags);
+router.get('/sessions', m.checkToken, m.setUser, m.validateRequest, sessions.index);
+router.post('/sessions', m.checkToken, m.setUser, m.validateRequest, sessions.create);
+router.get('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.get);
+router.patch('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.update);
+router.delete('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.destroy);
+router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, m.validateRequest, sessions.getAllSessionFrames);
+router.get('/sessions/:id/flags', m.checkToken, m.setUser, m.validateRequest, sessions.getAllFlags);
 
 // Session Frames
 router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
