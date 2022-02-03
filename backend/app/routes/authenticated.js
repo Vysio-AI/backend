@@ -25,12 +25,12 @@ const router = Router({
 router.get('/signup-status', m.checkToken, m.setUser, signups.signupStatus);
 
 // Clients
-router.get('/clients', m.checkToken, m.setUser, clients.index);
-router.get('/clients/:id', m.checkToken, m.setUser, clients.get);
-router.patch('/clients/:id', m.checkToken, m.setUser, clients.update);
-router.delete('/clients/:id', m.checkToken, m.setUser, clients.destroy);
-router.get('/clients/:id/plans', m.checkToken, m.setUser, clients.getAllPlans);
-router.get('/clients/:id/sessions', m.checkToken, m.setUser, clients.getAllSessions);
+router.get('/clients', m.checkToken, m.setUser, m.validateRequest, clients.index);
+router.get('/clients/:id', m.checkToken, m.setUser, m.validateRequest, clients.get);
+router.patch('/clients/:id', m.checkToken, m.setUser, m.validateRequest, clients.update);
+router.delete('/clients/:id', m.checkToken, m.setUser, m.validateRequest, clients.destroy);
+router.get('/clients/:id/plans', m.checkToken, m.setUser, m.validateRequest, clients.getAllPlans);
+router.get('/clients/:id/sessions', m.checkToken, m.setUser, m.validateRequest, clients.getAllSessions);
 
 // Practitioners
 router.get('/practitioners/:id', m.checkToken, m.setUser, practitioners.get);
