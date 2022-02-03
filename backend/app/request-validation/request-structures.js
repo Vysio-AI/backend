@@ -98,6 +98,11 @@ const requestStructures = {
   '/api/v1/sessions/:id/flags': {
     'GET': new RequestStructure(),
   },
+  '/api/v1/session-frames/:id': {
+    'GET': new RequestStructure(
+      new RequestParameter('sessionId', TypeValidator.INT, true),
+    ),
+  },
 }
 
 module.exports = requestStructures;

@@ -65,7 +65,7 @@ router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, m.validateRe
 router.get('/sessions/:id/flags', m.checkToken, m.setUser, m.validateRequest, sessions.getAllFlags);
 
 // Session Frames
-router.get('/session-frames/:id', m.checkToken, m.setUser, sessionFrames.get);
+router.get('/session-frames/:id', m.checkToken, m.setUser, m.validateRequest, sessionFrames.get);
 
 // Flags
 router.post('/flags', m.checkToken, m.setUser, flags.create);
