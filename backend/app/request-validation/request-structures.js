@@ -31,6 +31,28 @@ const requestStructures = {
     ),
     'DELETE': new RequestStructure(),
   },
+  '/api/v1/plans': {
+    'POST': new RequestStructure(
+      new RequestParameter('repetitions', TypeValidator.INT, true),
+      new RequestParameter('timeframe', TypeValidator.TIMEFRAME, true),
+      new RequestParameter('practitionerId', TypeValidator.INT, true),
+    ),
+  },
+  '/api/v1/plans/:id': {
+    'GET': new RequestStructure(),
+    'PATCH': new RequestStructure(
+      new RequestParameter('repetitions', TypeValidator.INT, false),
+      new RequestParameter('timeframe', TypeValidator.TIMEFRAME, false),
+      new RequestParameter('practitionerId', TypeValidator.INT, false),
+    ),
+    'DELETE': new RequestStructure(),
+  },
+  '/api/v1/plans/:id/exercises': {
+    'GET': new RequestStructure(),
+  },
+  '/api/v1/plans/:id/sessions': {
+    'GET': new RequestStructure(),
+  },
 }
 
 module.exports = requestStructures;

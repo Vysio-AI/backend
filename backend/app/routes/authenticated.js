@@ -42,12 +42,12 @@ router.post('/practitioners/signup', m.checkToken, m.setUser, signups.signupPrac
 router.post('/clients/signup', m.checkToken, m.setUser, signups.signupClient);
 
 // Plans
-router.post('/plans', m.checkToken, m.setUser, plans.create);
-router.get('/plans/:id', m.checkToken, m.setUser, plans.get);
-router.patch('/plans/:id', m.checkToken, m.setUser, plans.update);
-router.delete('/plans/:id', m.checkToken, m.setUser, plans.destroy);
-router.get('/plans/:id/exercises', m.checkToken, m.setUser, plans.getAllExercises);
-router.get('/plans/:id/sessions', m.checkToken, m.setUser, plans.getAllSessions);
+router.post('/plans', m.checkToken, m.setUser, m.validateRequest, plans.create);
+router.get('/plans/:id', m.checkToken, m.setUser, m.validateRequest, plans.get);
+router.patch('/plans/:id', m.checkToken, m.setUser, m.validateRequest, plans.update);
+router.delete('/plans/:id', m.checkToken, m.setUser, m.validateRequest, plans.destroy);
+router.get('/plans/:id/exercises', m.checkToken, m.setUser, m.validateRequest, plans.getAllExercises);
+router.get('/plans/:id/sessions', m.checkToken, m.setUser, m.validateRequest, plans.getAllSessions);
 
 // Exercises
 router.post('/exercises', m.checkToken, m.setUser, exercises.create);

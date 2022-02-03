@@ -9,8 +9,8 @@ function intValidationFn (value) {
   return Number.isInteger(value)
 }
 
-function completionFrequencyValidationFn (value) {
-  return (typeof(value) === "string" && ["E1D", "E2D", "E7D"].includes(value))
+function timeframeValidationFn (value) {
+  return (typeof(value) === "string" && ["DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY"].includes(value))
 }
 
 /*
@@ -22,7 +22,7 @@ function completionFrequencyValidationFn (value) {
 const TypeValidator = {
   STRING: stringValidationFn,
   INT: intValidationFn,
-  COMPLETION_FREQUENCY: completionFrequencyValidationFn,
+  TIMEFRAME: timeframeValidationFn,
 }
 
 module.exports = TypeValidator
