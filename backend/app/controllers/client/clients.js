@@ -70,24 +70,16 @@ const getAllPlans = async (ctx) => {
     return
   }
 
-  const limit = parseInt(ctx.params.limit);
-  const offset = parseInt(ctx.params.offset);
-
   const client = await prisma.client.findUnique({
     where: {
       id: clientId
+    },
+    include: {
+      plans: true
     }
   });
 
-  const plans = await prisma.plan.findMany({
-    take: limit,
-    skip: offset,
-    where: {
-      id: { in: client.plans }
-    }
-  });
-
-  ctx.body = plans;
+  ctx.body = client.plans;
   ctx.status = 200;
 }
 
