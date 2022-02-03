@@ -6,6 +6,9 @@ const TypeValidator = require("./type-validator");
  * RequestStructure object.
  */
 const requestStructures = {
+  '/api/v1/signup-status': {
+    'GET': new RequestStructure(),
+  },
   '/api/v1/clients/:id': {
     'GET': new RequestStructure(),
     'PATCH': new RequestStructure(
@@ -30,6 +33,21 @@ const requestStructures = {
       new RequestParameter('phoneNumber', TypeValidator.STRING, false),
     ),
     'DELETE': new RequestStructure(),
+  },
+  '/api/v1/practitioners/signup': {
+    'POST': new RequestStructure(
+      new RequestParameter('firstName', TypeValidator.STRING, true),
+      new RequestParameter('lastName', TypeValidator.STRING, true),
+      new RequestParameter('phoneNumber', TypeValidator.STRING, false),
+    ),
+  },
+  '/api/v1/clients/signup': {
+    'POST': new RequestStructure(
+      new RequestParameter('firstName', TypeValidator.STRING, true),
+      new RequestParameter('lastName', TypeValidator.STRING, true),
+      new RequestParameter('phoneNumber', TypeValidator.STRING, false),
+      new RequestParameter('practitionerId', TypeValidator.INT, false),
+    ),
   },
   '/api/v1/plans': {
     'POST': new RequestStructure(

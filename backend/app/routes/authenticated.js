@@ -22,7 +22,7 @@ const router = Router({
 });
 
 // Signup status
-router.get('/signup-status', m.checkToken, m.setUser, signups.signupStatus);
+router.get('/signup-status', m.checkToken, m.setUser, m.validateRequest, signups.signupStatus);
 
 // Clients
 router.get('/clients', m.checkToken, m.setUser, m.validateRequest, clients.index);
@@ -38,8 +38,8 @@ router.patch('/practitioners/:id', m.checkToken, m.setUser, m.validateRequest, p
 router.delete('/practitioners/:id', m.checkToken, m.setUser, m.validateRequest, practitioners.destroy);
 
 // Signups
-router.post('/practitioners/signup', m.checkToken, m.setUser, signups.signupPractitioner);
-router.post('/clients/signup', m.checkToken, m.setUser, signups.signupClient);
+router.post('/practitioners/signup', m.checkToken, m.setUser, m.validateRequest, signups.signupPractitioner);
+router.post('/clients/signup', m.checkToken, m.setUser, m.validateRequest, signups.signupClient);
 
 // Plans
 router.post('/plans', m.checkToken, m.setUser, m.validateRequest, plans.create);
