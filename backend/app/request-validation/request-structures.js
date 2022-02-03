@@ -103,6 +103,22 @@ const requestStructures = {
       new RequestParameter('sessionId', TypeValidator.INT, true),
     ),
   },
+  '/api/v1/flags': {
+    'POST': new RequestStructure(
+      new RequestParameter('time', TypeValidator.DATE_TIME, true),
+      new RequestParameter('notes', TypeValidator.STRING, false),
+      new RequestParameter('sessionId', TypeValidator.INT, true),
+    ),
+  },
+  '/api/v1/flags/:id': {
+    'GET': new RequestStructure(),
+    'PATCH': new RequestStructure(
+      new RequestParameter('time', TypeValidator.DATE_TIME, false),
+      new RequestParameter('notes', TypeValidator.STRING, false),
+      new RequestParameter('sessionId', TypeValidator.INT, false),
+    ),
+    'DELETE': new RequestStructure(),
+  },
 }
 
 module.exports = requestStructures;

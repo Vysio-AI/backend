@@ -68,10 +68,10 @@ router.get('/sessions/:id/flags', m.checkToken, m.setUser, m.validateRequest, se
 router.get('/session-frames/:id', m.checkToken, m.setUser, m.validateRequest, sessionFrames.get);
 
 // Flags
-router.post('/flags', m.checkToken, m.setUser, flags.create);
-router.get('/flags/:id', m.checkToken, m.setUser, flags.get);
-router.post('/flags/:id', m.checkToken, m.setUser, flags.update);
-router.delete('/flags/:id', m.checkToken, m.setUser, flags.destroy);
+router.post('/flags', m.checkToken, m.setUser, m.validateRequest, flags.create);
+router.get('/flags/:id', m.checkToken, m.setUser, m.validateRequest, flags.get);
+router.post('/flags/:id', m.checkToken, m.setUser, m.validateRequest, flags.update);
+router.delete('/flags/:id', m.checkToken, m.setUser, m.validateRequest, flags.destroy);
 
 // Video
 router.post('/videos', m.checkToken, m.setUser, videos.create);
