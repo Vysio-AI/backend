@@ -22,6 +22,15 @@ const requestStructures = {
   '/api/v1/clients/:id/sessions': {
     'GET': new RequestStructure()
   },
+  '/api/v1/practitioners/:id': {
+    'GET': new RequestStructure(),
+    'PATCH': new RequestStructure(
+      new RequestParameter('firstName', TypeValidator.STRING, false),
+      new RequestParameter('lastName', TypeValidator.STRING, false),
+      new RequestParameter('phoneNumber', TypeValidator.STRING, false),
+    ),
+    'DELETE': new RequestStructure(),
+  },
 }
 
 module.exports = requestStructures;

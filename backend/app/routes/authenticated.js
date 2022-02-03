@@ -33,15 +33,15 @@ router.get('/clients/:id/plans', m.checkToken, m.setUser, m.validateRequest, cli
 router.get('/clients/:id/sessions', m.checkToken, m.setUser, m.validateRequest, clients.getAllSessions);
 
 // Practitioners
-router.get('/practitioners/:id', m.checkToken, m.setUser, practitioners.get);
-router.patch('/practitioners/:id', m.checkToken, m.setUser, practitioners.update);
-router.delete('/practitioners/:id', m.checkToken, m.setUser, practitioners.destroy);
+router.get('/practitioners/:id', m.checkToken, m.setUser, m.validateRequest, practitioners.get);
+router.patch('/practitioners/:id', m.checkToken, m.setUser, m.validateRequest, practitioners.update);
+router.delete('/practitioners/:id', m.checkToken, m.setUser, m.validateRequest, practitioners.destroy);
 
 // Signups
 router.post('/practitioners/signup', m.checkToken, m.setUser, signups.signupPractitioner);
 router.post('/clients/signup', m.checkToken, m.setUser, signups.signupClient);
 
-// plans
+// Plans
 router.post('/plans', m.checkToken, m.setUser, plans.create);
 router.get('/plans/:id', m.checkToken, m.setUser, plans.get);
 router.patch('/plans/:id', m.checkToken, m.setUser, plans.update);
