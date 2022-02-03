@@ -119,6 +119,16 @@ const requestStructures = {
     ),
     'DELETE': new RequestStructure(),
   },
+  '/api/v1/videos': {
+    'POST': new RequestStructure(
+      new RequestParameter('fileName', TypeValidator.STRING, true),
+      new RequestParameter('sessionId', TypeValidator.INT, true),
+    ),
+  },
+  '/api/v1/videos/:id': {
+    'GET': new RequestStructure(),
+    'DELETE': new RequestStructure(),
+  },
 }
 
 module.exports = requestStructures;

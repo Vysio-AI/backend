@@ -74,8 +74,8 @@ router.post('/flags/:id', m.checkToken, m.setUser, m.validateRequest, flags.upda
 router.delete('/flags/:id', m.checkToken, m.setUser, m.validateRequest, flags.destroy);
 
 // Video
-router.post('/videos', m.checkToken, m.setUser, videos.create);
-router.get('/videos/:id', m.checkToken, m.setUser, videos.get);
-router.delete('/videos/:id', m.checkToken, m.setUser, videos.destroy);
+router.post('/videos', m.checkToken, m.setUser, m.validateRequest, videos.create);
+router.get('/videos/:id', m.checkToken, m.setUser, m.validateRequest, videos.get);
+router.delete('/videos/:id', m.checkToken, m.setUser, m.validateRequest, videos.destroy);
 
 module.exports = router
