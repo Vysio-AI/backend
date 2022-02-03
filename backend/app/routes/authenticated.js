@@ -50,10 +50,10 @@ router.get('/plans/:id/exercises', m.checkToken, m.setUser, m.validateRequest, p
 router.get('/plans/:id/sessions', m.checkToken, m.setUser, m.validateRequest, plans.getAllSessions);
 
 // Exercises
-router.post('/exercises', m.checkToken, m.setUser, exercises.create);
-router.get('/exercises/:id', m.checkToken, m.setUser, exercises.get);
-router.patch('/exercises/:id', m.checkToken, m.setUser, exercises.update);
-router.delete('/exercises/:id', m.checkToken, m.setUser, exercises.destroy);
+router.post('/exercises', m.checkToken, m.setUser, m.validateRequest, exercises.create);
+router.get('/exercises/:id', m.checkToken, m.setUser, m.validateRequest, exercises.get);
+router.patch('/exercises/:id', m.checkToken, m.setUser, m.validateRequest, exercises.update);
+router.delete('/exercises/:id', m.checkToken, m.setUser, m.validateRequest, exercises.destroy);
 
 // Sessions
 router.get('/sessions', m.checkToken, m.setUser, sessions.index);
