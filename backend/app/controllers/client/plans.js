@@ -32,7 +32,7 @@ const getAllExercises = async (ctx) => {
     }
   });
 
-  if (plan.clients.some(c => c.id == ctx.client.id)) {
+  if (!plan.clients.some(c => c.id == ctx.client.id)) {
     ctx.status = 401;
     return
   }
