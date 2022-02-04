@@ -9,8 +9,21 @@ function intValidationFn (value) {
   return Number.isInteger(value)
 }
 
-function completionFrequencyValidationFn (value) {
-  return (typeof(value) === "string" && ["E1D", "E2D", "E7D"].includes(value))
+function booleanValidationFn (value) {
+  return typeof(value) === "boolean"
+}
+
+function timeframeValidationFn (value) {
+  return (typeof(value) === "string" && ["DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY"].includes(value))
+}
+
+function activityTypeValidationFn (value) {
+  return (typeof(value) === "string" && ["PENDULUM", "ABDUCTION", "FORWARD_ELEVATION", "INTERNAL_ROTATION", "EXTERNAL_ROTATION", "TRAPEZIUS_EXTENSION", "UPRIGHT_ROW"].includes(value))
+}
+
+function datetimeValidationFn (value) {
+  // TODO: Check datetime can be parsed from value
+  return typeof(value) === "string"
 }
 
 /*
@@ -22,7 +35,10 @@ function completionFrequencyValidationFn (value) {
 const TypeValidator = {
   STRING: stringValidationFn,
   INT: intValidationFn,
-  COMPLETION_FREQUENCY: completionFrequencyValidationFn,
+  BOOLEAN: booleanValidationFn,
+  TIMEFRAME: timeframeValidationFn,
+  ACTIVITY_TYPE: activityTypeValidationFn,
+  DATE_TIME: datetimeValidationFn,
 }
 
 module.exports = TypeValidator
