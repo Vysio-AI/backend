@@ -100,9 +100,9 @@ model Exercise {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   activityType  ActivityType
-  duration      BigInt
-  Plan     Plan?      @relation(fields: [planId], references: [id])
-  planId    Int?
+  duration      Int
+  Plan          Plan?      @relation(fields: [planId], references: [id])
+  planId        Int?
   sessionFrames SessionFrame[]
 }
 
