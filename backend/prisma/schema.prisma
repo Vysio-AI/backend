@@ -44,13 +44,12 @@ model Session {
   updatedAt      DateTime       @updatedAt
   startTime      DateTime
   endTime        DateTime?
-  processed      Boolean        @default(false)
   sessionFrames  SessionFrame[]
   flags          Flag[]
   Client         Client      @relation(fields: [clientId], references: [id])
   clientId       Int
   planId         Int
-  practitionerId Int?
+  practitionerId Int
   video          Video?
 }
 
@@ -60,9 +59,9 @@ model SessionFrame {
   updatedAt  DateTime  @updatedAt
   startTime  DateTime
   endTime    DateTime
-  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
-  Session    Session?  @relation(fields: [sessionId], references: [id])
-  sessionId  Int?
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  Session    Session  @relation(fields: [sessionId], references: [id])
+  sessionId  Int
   exerciseId Int
 }
 
@@ -72,8 +71,10 @@ model Flag {
   updatedAt  DateTime  @updatedAt
   time       DateTime
   notes      String?
-  Session    Session?  @relation(fields: [sessionId], references: [id])
-  sessionId  Int?
+  Session    Session  @relation(fields: [sessionId], references: [id])
+  sessionId  Int
+  clientId   Int
+  practitionerId Int
 }
 
 model Video {
@@ -83,6 +84,8 @@ model Video {
   fileName   String
   Session    Session  @relation(fields: [sessionId], references: [id])
   sessionId  Int
+  clientId   Int
+  practitionerId Int
 }
 
 enum ActivityType {
@@ -101,8 +104,8 @@ model Exercise {
   updatedAt     DateTime       @updatedAt
   activityType  ActivityType
   duration      Int
-  Plan          Plan?      @relation(fields: [planId], references: [id])
-  planId        Int?
+  Plan          Plan      @relation(fields: [planId], references: [id])
+  planId        Int
   sessionFrames SessionFrame[]
 }
 
@@ -114,6 +117,7 @@ model Plan {
   activatedAt         DateTime?
   deactivatedAt       DateTime?
   repetitions         Int
+  name                String
   timeframe           TimeFrame
   Practitioner        Practitioner     @relation(fields: [practitionerId], references: [id])
   practitionerId      Int

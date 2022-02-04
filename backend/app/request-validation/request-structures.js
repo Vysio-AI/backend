@@ -54,6 +54,7 @@ const requestStructures = {
       new RequestParameter('repetitions', TypeValidator.INT, true),
       new RequestParameter('timeframe', TypeValidator.TIMEFRAME, true),
       new RequestParameter('practitionerId', TypeValidator.INT, true),
+      new RequestParameter('name', TypeValidator.STRING, true)
     ),
   },
   '/api/v1/plans/:id': {
@@ -62,6 +63,7 @@ const requestStructures = {
       new RequestParameter('repetitions', TypeValidator.INT, false),
       new RequestParameter('timeframe', TypeValidator.TIMEFRAME, false),
       new RequestParameter('practitionerId', TypeValidator.INT, false),
+      new RequestParameter('name', TypeValidator.STRING, false)
     ),
     'DELETE': new RequestStructure(),
   },
@@ -92,10 +94,9 @@ const requestStructures = {
     'POST': new RequestStructure(
       new RequestParameter('startTime', TypeValidator.DATE_TIME, true),
       new RequestParameter('endTime', TypeValidator.DATE_TIME, false),
-      new RequestParameter('processed', TypeValidator.BOOLEAN, true),
       new RequestParameter('clientId', TypeValidator.INT, true),
       new RequestParameter('planId', TypeValidator.INT, true),
-      new RequestParameter('practitionerId', TypeValidator.INT, false),
+      new RequestParameter('practitionerId', TypeValidator.INT, true),
     ),
   },
   '/api/v1/sessions/:id': {
