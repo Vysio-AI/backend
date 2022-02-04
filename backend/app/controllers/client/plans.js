@@ -25,7 +25,7 @@ const getAllExercises = async (ctx) => {
 
   const plan = await prisma.plan.findUnique({
     where: {
-      id: id,
+      id: planId,
     },
     include: {
       clients: true,
