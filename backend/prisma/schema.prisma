@@ -21,6 +21,7 @@ model Practitioner {
   auth0Sub             String                            @unique
   clients              Client[]
   plans                Plan[]
+  invites              Invite[]
 }
 
 model Client {
@@ -130,4 +131,22 @@ enum TimeFrame {
   WEEKLY
   BIWEEKLY
   MONTHLY
+}
+
+enum InviteStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model Invite {
+  id                  Int        @id @default(autoincrement())
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  expiry              DateTime   @default(dbgenerated("NOW() + interval '1 week'"))
+  status              InviteStatus @default(PENDING)
+  Practitioner        Practitioner     @relation(fields: [practitionerId], references: [id])
+  practitionerId      Int
+  clientEmail         String     @unique
+  referralCode        String
 }
