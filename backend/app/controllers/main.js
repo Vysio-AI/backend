@@ -263,7 +263,35 @@ module.exports = {
         null,
       )
     }
-  }
+  },
+  invites: {
+    index: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.invites.index
+      )
+    },
+    create: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.invites.create
+      )
+    },
+    update: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.invites.update
+      )
+    },
+    validateReferral: function(ctx) {
+      ctx,
+      clientsController.invites.validateReferral,
+      null
+    },
+  },
 }
 
 

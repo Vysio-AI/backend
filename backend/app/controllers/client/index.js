@@ -8,6 +8,7 @@ const sessions = require('./sessions');
 const sessionFrames = require('./session-frames');
 const flags = require('./flags');
 const videos = require('./videos');
+const invites = require('./invites');
 
 module.exports = {
   clients: clients,
@@ -19,6 +20,7 @@ module.exports = {
   sessionFrames: sessionFrames,
   flags: flags,
   videos: videos,
+  invites: invites,
 }
 
 

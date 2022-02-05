@@ -5,11 +5,13 @@ const kafka = new Kafka({
 })
 
 const sessionFrames = require('../controllers/client/session-frames');
+const { sendInviteEmail } = require('../email/index');
 
 const topics = {
   CLASSIFICATIONS: "classifications",
   SESSION_END: "session-end",
   WATCH: "watch",
+  INVITES: "invites",
 };
 
 const setup = async (socketService) => {
@@ -18,17 +20,22 @@ const setup = async (socketService) => {
 
   await consumer.connect();
 
+  // Subscribe to relevant topics
   await consumer.subscribe({ topic: topics.CLASSIFICATIONS });
   await consumer.subscribe({ topic: topics.SESSION_END });
+  await consumer.subscribe({ topic: topics.INVITES });
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       switch (topic) {
         case topics.CLASSIFICATIONS:
-          processClassifications(topic, partition, message, socketService);
+          await processClassifications(message, socketService);
           break;
         case topics.SESSION_END:
-          processSessionEnd(topic, partition, message, socketService);
+          await processSessionEnd(topic, partition, message, socketService);
+          break;
+        case topics.INVITES:
+          await processInvites(message);
           break;
         default:
           console.log(topic);
@@ -38,7 +45,7 @@ const setup = async (socketService) => {
   });
 }
 
-const processClassifications = async (topic, partition, message, socketService) => {
+const processClassifications = async (message, socketService) => {
   // Parse json message
   const jsonMsg = JSON.parse(message.value.toString());
   console.log(jsonMsg);
@@ -48,6 +55,21 @@ const processClassifications = async (topic, partition, message, socketService) 
 
   // Persist to database
   // TODO
+}
+
+const processInvites = async (message) => {
+  // Parse JSON invite object
+  const invite = JSON.parse(message.value.toString());
+  console.log(invite);
+
+  // TODO: Finalize email template and refactor invite model to have required
+  //       fields
+  //
+  // sendInviteEmail(invite.clientEmail, {
+  //   client_name: invite.clientName,
+  //   practitioner_name: invite.practitionerName,
+  //   referral_code: invite.referralCode
+  // });
 }
 
 const processSessionEnd = async (topic, partition, message, socketService) => {

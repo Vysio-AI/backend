@@ -90,7 +90,7 @@ const setUser = async (ctx, next) => {
 }
 
 const validateRequest = async (ctx, next) => {
-  const requestStructure = requestStructures?.[ctx._matchedRoute]?.[ctx.request.method]
+  const requestStructure = requestStructures[ctx._matchedRoute] ? requestStructures[ctx._matchedRoute][ctx.request.method] : null;
 
   if (!requestStructure) {
     console.log(`Request structure undefined for method '${ctx.request.method}' at route '${ctx._matchedRoute}'`);
