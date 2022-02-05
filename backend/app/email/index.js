@@ -18,7 +18,14 @@ const sendInviteEmail = (recipientEmail, templateData) => {
     to: recipientEmail,
     from: 'invite@em8130.vysio.ca',
     templateId: 'd-6d2fe36aee4e4a8cada08e09010b1a7f',
-    dynamicTemplateData: templateData
+    dynamicTemplateData: {
+      ...templateData,
+      Sender_Name: "Vysio AI",
+      Sender_Address: "200 University Ave W",
+      Sender_City: "Waterloo",
+      Sender_State: "Ontario",
+      Sender_Zip: "N2L 3G5"
+    }
   }
   sgMail
   .send(msg)
