@@ -21,6 +21,7 @@ const create = async (ctx) => {
   const invite = await prisma.invite.create({
     data: {
       ...ctx.request.body,
+      practitionerId: ctx.practitioner.id,
       referralCode: nd.nanoid(10)
     }
   }).catch((err) => {
@@ -30,6 +31,7 @@ const create = async (ctx) => {
         inviteExistsForEmail = true
       }
     }
+    console.log(err);
   });
 
   if (inviteExistsForEmail) {
@@ -43,7 +45,14 @@ const create = async (ctx) => {
   // Produce invite object to kafka topic
   // Use practitionerId as key to ensure all invites produced by a
   // practitioner are written to the same kafka partition
-  await kafka.sendMessage(kafka.topics.INVITES, invite.practitionerId, invite);
+  await kafka.sendMessage(
+    kafka.topics.NOTIFICATIONS,
+    invite.practitionerId.toString(),
+    JSON.stringify({
+      notificationType: 'INVITE',
+      ...invite
+    })
+  );
 
   ctx.body = invite
   ctx.status = 200

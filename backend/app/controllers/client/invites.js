@@ -5,7 +5,7 @@ const validateReferral = async (ctx) => {
   const updateInvite = await prisma.invite.update({
     where: {
       referralCode: ctx.request.body.referralCode,
-      status: 'PENDING'
+      status: 'SENT'
     },
     data: {
       status: 'COMPLETED'

@@ -5,13 +5,13 @@ const kafka = new Kafka({
 })
 
 const sessionFrames = require('../controllers/client/session-frames');
-const { sendInviteEmail } = require('../email/index');
+const { notificationHandlers } = require('../notifications/index');
 
 const topics = {
   CLASSIFICATIONS: "classifications",
   SESSION_END: "session-end",
   WATCH: "watch",
-  INVITES: "invites",
+  NOTIFICATIONS: "notifications",
 };
 
 const setup = async (socketService) => {
@@ -23,7 +23,7 @@ const setup = async (socketService) => {
   // Subscribe to relevant topics
   await consumer.subscribe({ topic: topics.CLASSIFICATIONS });
   await consumer.subscribe({ topic: topics.SESSION_END });
-  await consumer.subscribe({ topic: topics.INVITES });
+  await consumer.subscribe({ topic: topics.NOTIFICATIONS });
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
@@ -34,8 +34,8 @@ const setup = async (socketService) => {
         case topics.SESSION_END:
           await processSessionEnd(topic, partition, message, socketService);
           break;
-        case topics.INVITES:
-          await processInvites(message);
+        case topics.NOTIFICATIONS:
+          await processNotification(message);
           break;
         default:
           console.log(topic);
@@ -57,19 +57,19 @@ const processClassifications = async (message, socketService) => {
   // TODO
 }
 
-const processInvites = async (message) => {
+const processNotification = async (message) => {
   // Parse JSON invite object
-  const invite = JSON.parse(message.value.toString());
-  console.log(invite);
+  const notification = JSON.parse(message.value.toString());
 
-  // TODO: Finalize email template and refactor invite model to have required
-  //       fields
-  //
-  // sendInviteEmail(invite.clientEmail, {
-  //   client_name: invite.clientName,
-  //   practitioner_name: invite.practitionerName,
-  //   referral_code: invite.referralCode
-  // });
+  // Get notification type from message
+  const notificationHandler = notificationHandlers[notification.notificationType]
+
+  if (!notificationHandler) {
+    console.log(`No function implemented to process ${notification.notificationType} notifications`);
+    return
+  }
+
+  await notificationHandler(notification)
 }
 
 const processSessionEnd = async (topic, partition, message, socketService) => {

@@ -13,7 +13,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 //      referral_code: Referral code generated for invite
 //    }
 // Returns Array [success, error] with types [bool, Object | null]
-const sendInviteEmail = (recipientEmail, templateData) => {
+const sendInviteEmail = async (recipientEmail, templateData) => {
   const msg = {
     to: recipientEmail,
     from: 'invite@em8130.vysio.ca',
@@ -27,15 +27,14 @@ const sendInviteEmail = (recipientEmail, templateData) => {
       Sender_Zip: "N2L 3G5"
     }
   }
-  sgMail
-  .send(msg)
-  .then(() => {
-    console.log(`Invite email sent to: ${recipientEmail}`)
-    return [true, null]
-  })
-  .catch((error) => {
+
+  await sgMail.send(msg).catch((error) => {
+    console.log(error);
     return [false, error]
   })
+  
+  console.log(`Invite email sent to: ${recipientEmail}`)
+  return [true, null]
 }
 
 module.exports = {
