@@ -24,7 +24,7 @@ const inviteNotificationHandler = async (notification) => {
   const inviteStatus = isSent ? 'SENT' : 'FAILED'
 
   // Update invite record with relevant status
-  const updateInvite = await prisma.invite.update({
+  await prisma.invite.update({
     where: {
       id: notification.id
     },
@@ -34,8 +34,20 @@ const inviteNotificationHandler = async (notification) => {
   });
 }
 
+const sessionNotificationHandler = async (notification) => {
+  const client = await prisma.client.findUnique({
+    where: {
+      id: notification.clientId,
+    }
+  })
+
+  console.log("Testing session notification handler");
+  console.log(notification);
+}
+
 const notificationHandlers = {
   INVITE: inviteNotificationHandler,
+  SESSION: sessionNotificationHandler,
 }
 
 module.exports = {

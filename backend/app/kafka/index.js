@@ -1,4 +1,6 @@
+const prisma = require('../controllers/prisma-client')
 const { Kafka } = require('kafkajs')
+
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
   brokers: [process.env.BROKER]
@@ -32,14 +34,13 @@ const setup = async (socketService) => {
           await processClassifications(message, socketService);
           break;
         case topics.SESSION_END:
-          await processSessionEnd(topic, partition, message, socketService);
+          await processSessionEnd(message, socketService);
           break;
         case topics.NOTIFICATIONS:
           await processNotification(message);
           break;
         default:
-          console.log(topic);
-          console.log("Topic handler not implemented");
+          console.log(`Topic handler not implemented for ${topic}`);
       }
     },
   });
@@ -72,13 +73,47 @@ const processNotification = async (message) => {
   await notificationHandler(notification)
 }
 
-const processSessionEnd = async (topic, partition, message, socketService) => {
-  // Potential TODO: Create the SessionMetrics record for the session
-  // 1. Clean the session data -> Low pass filter on the sessionFrames
-  // 2. Detect transition points
-  // 3. Update overall client stats
-  // 4. Update the processed state
-  // 5. Send websocket message on sessions:userId to update processed status
+// Not 100% sure about this, since we might not be finished processing all
+// the session frames for a particular session before we receive this
+// message... But it will work for now...
+const processSessionEnd = async (message, socketService) => {
+  message = JSON.parse(message.value.toString())
+
+  const updateSession = await prisma.session.update({
+    where: {
+      id: message.sessionId
+    },
+    data: {
+      endTime: message.timestamp
+    },
+    include: {
+      flags: true
+    },
+  })
+
+  // Create/update session metrics
+
+  // Produce session summary notification if flags exist in session
+  if (updateSession.flags.length > 0) {
+    await sendMessage(
+      topics.NOTIFICATIONS,
+      updateSession.practitionerId.toString(),
+      JSON.stringify({
+        notificationType: 'SESSION',
+        sessionId: updateSession.id,
+        flags: updateSession.flags,
+        clientId: updateSession.clientId,
+        planId: updateSession.planId,
+        practitionerId: updateSession.practitionerId,
+      })
+    )
+  }
+
+  // Emit message over socket to notify frontend that session has been processed
+  socketService.emitter(
+    `sessions:${updateSession.clientId}`,
+    `Session ${updateSession.id} sucessfully processed`
+  );
 }
 
 const sendMessage = async (topic, key, message) => {
