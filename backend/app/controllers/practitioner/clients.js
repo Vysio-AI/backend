@@ -2,12 +2,7 @@ const prisma = require('../prisma-client');
 
 const index = async (ctx) => {
 
-  const limit = parseInt(ctx.params.limit);
-  const offset = parseInt(ctx.params.offset);
-
   const allClients = await prisma.client.findMany({
-    take: limit,
-    skip: offset,
     where: {
       practitionerId: ctx.practitioner.id
     }
@@ -98,12 +93,7 @@ const getAllPlans = async (ctx) => {
     return
   }
 
-  const limit = parseInt(ctx.params.limit);
-  const offset = parseInt(ctx.params.offset);
-
   const plans = await prisma.plan.findMany({
-    take: limit,
-    skip: offset,
     where: {
       clientId: clientId
     }
@@ -124,12 +114,7 @@ const getAllSessions = async (ctx) => {
     return
   }
 
-  const limit = parseInt(ctx.params.limit);
-  const offset = parseInt(ctx.params.offset);
-
   const sessions = await prisma.session.findMany({
-    take: limit,
-    skip: offset,
     where: {
       clientId: clientId
     }
