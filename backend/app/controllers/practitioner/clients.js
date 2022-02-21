@@ -8,12 +8,12 @@ const index = async (ctx) => {
     }
   });
 
-  allClients = allClients.map(client => {
+  clients = allClients.map(client => {
     delete client.auth0Sub;
     return client
   })
 
-  ctx.body = allClients;
+  ctx.body = clients;
   ctx.status = 200;
 };
 
