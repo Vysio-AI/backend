@@ -93,8 +93,8 @@ const processSessionEnd = async (message, socketService) => {
 
   // Create/update session metrics
 
-  // Produce session summary notification if flags exist in session
-  if (updateSession.flags.length > 0) {
+  // Produce session summary notification if session is notable
+  if (isNotableSession(updateSession)) {
     await sendMessage(
       topics.NOTIFICATIONS,
       updateSession.practitionerId.toString(),
@@ -114,6 +114,10 @@ const processSessionEnd = async (message, socketService) => {
     `sessions:${updateSession.clientId}`,
     `Session ${updateSession.id} sucessfully processed`
   );
+}
+
+const isNotableSession = (session) => {
+  return session.flags.length > 0
 }
 
 const sendMessage = async (topic, key, message) => {

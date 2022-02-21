@@ -1,4 +1,4 @@
-const { sendInviteEmail } = require('../email/index');
+const { sendEmail, emailTemplates } = require('../email/index');
 const prisma = require('../controllers/prisma-client');
 
 const inviteNotificationHandler = async (notification) => {
@@ -8,13 +8,17 @@ const inviteNotificationHandler = async (notification) => {
     }
   })
 
-  const [isSent, error] = await sendInviteEmail(notification.clientEmail, {
-    client_first_name: notification.clientFirstName,
-    client_last_name: notification.clientLastName,
-    practitioner_first_name: practitioner.firstName,
-    practitioner_last_name: practitioner.lastName,
-    referral_code: notification.referralCode
-  });
+  const [isSent, error] = await sendEmail(
+    notification.clientEmail,
+    emailTemplates.INVITE,
+    {
+      client_first_name: notification.clientFirstName,
+      client_last_name: notification.clientLastName,
+      practitioner_first_name: practitioner.firstName,
+      practitioner_last_name: practitioner.lastName,
+      referral_code: notification.referralCode
+    }
+  );
 
   if (!isSent) {
     console.log(`Unable to send invite to ${notification.clientEmail}`);
@@ -40,6 +44,19 @@ const sessionNotificationHandler = async (notification) => {
       id: notification.clientId,
     }
   })
+
+  const [isSent, error] = await sendEmail(
+    notification.clientEmail,
+    emailTemplates.SESSION,
+    {
+
+    }
+  );
+
+  if (!isSent) {
+    console.log(`Unable to send session to ${notification.clientEmail}`);
+    console.log(error);
+  }
 
   console.log("Testing session notification handler");
   console.log(notification);
