@@ -5,13 +5,13 @@ const bodyParser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const cors = require('@koa/cors');
 
+require('dotenv').config();
+
 const authenticatedRouter = require('./routes/authenticated');
 const publicRouter = require('./routes/public');
 const middlewares = require("./middlewares/index");
 
 const kafka = require("./kafka/index");
-
-require('dotenv').config();
 
 const app = new Koa();
 

@@ -38,18 +38,32 @@ const inviteNotificationHandler = async (notification) => {
   });
 }
 
+// TODO: Implement this function to take a sessionId and return the URL
+//       to view the session page in the frontend web app
+const getSessionUrl = (sessionId) => {
+  return "https://github.com"
+}
+
 const sessionNotificationHandler = async (notification) => {
   const client = await prisma.client.findUnique({
     where: {
       id: notification.clientId,
     }
-  })
+  });
+
+  const practitioner = await prisma.practitioner.findUnique({
+    where: {
+      id: notification.practitionerId,
+    }
+  });
 
   const [isSent, error] = await sendEmail(
-    notification.clientEmail,
+    practitioner.email,
     emailTemplates.SESSION,
     {
-
+      client_first_name: client.firstName,
+      client_last_name: client.lastName,
+      session_url: getSessionUrl(notification.sessionId),
     }
   );
 
@@ -57,9 +71,6 @@ const sessionNotificationHandler = async (notification) => {
     console.log(`Unable to send session to ${notification.clientEmail}`);
     console.log(error);
   }
-
-  console.log("Testing session notification handler");
-  console.log(notification);
 }
 
 const notificationHandlers = {

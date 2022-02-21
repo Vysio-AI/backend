@@ -101,7 +101,6 @@ const processSessionEnd = async (message, socketService) => {
       JSON.stringify({
         notificationType: 'SESSION',
         sessionId: updateSession.id,
-        flags: updateSession.flags,
         clientId: updateSession.clientId,
         planId: updateSession.planId,
         practitionerId: updateSession.practitionerId,
