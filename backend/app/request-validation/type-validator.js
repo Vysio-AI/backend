@@ -6,7 +6,7 @@ function stringValidationFn (value) {
 }
 
 function intValidationFn (value) {
-  return Number.isInteger(value)
+  return Number.isInteger(value) || !isNaN(parseInt(value))
 }
 
 function booleanValidationFn (value) {
