@@ -38,10 +38,8 @@ const inviteNotificationHandler = async (notification) => {
   });
 }
 
-// TODO: Implement this function to take a sessionId and return the URL
-//       to view the session page in the frontend web app
 const getSessionUrl = (sessionId) => {
-  return "https://github.com"
+  return `https://vysio.ca/dashboard/sessions/${sessionId}`
 }
 
 const sessionNotificationHandler = async (notification) => {
