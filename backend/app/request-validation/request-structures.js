@@ -50,6 +50,7 @@ const requestStructures = {
     ),
   },
   '/api/v1/plans': {
+    'GET': new RequestStructure(),
     'POST': new RequestStructure(
       new RequestParameter('repetitions', TypeValidator.INT, true),
       new RequestParameter('timeframe', TypeValidator.TIMEFRAME, true),

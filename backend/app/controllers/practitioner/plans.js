@@ -1,5 +1,16 @@
 const prisma = require('../prisma-client');
 
+const index = async (ctx) => {
+  const plans = await prisma.plan.findMany({
+    where: {
+      practitionerId: ctx.practitioner.id
+    }
+  });
+
+  ctx.body = plans
+  ctx.status = 200
+}
+
 const create = async (ctx) => {
 
   if (ctx.request.body.practitionerId != ctx.practitioner.id) {
@@ -105,6 +116,7 @@ const getAllSessions = async (ctx) => {
 }
 
 module.exports = {
+  index,
   create,
   get,
   update,

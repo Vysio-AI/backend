@@ -78,6 +78,13 @@ module.exports = {
     },
   },
   plans: {
+    index: async function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.plans.index,
+      )
+    },
     create: async function(ctx) {
       return callUserTypeFunction(
         ctx,

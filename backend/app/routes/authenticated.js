@@ -42,6 +42,7 @@ router.post('/practitioners/signup', m.checkToken, m.setUser, m.validateRequest,
 router.post('/clients/signup', m.checkToken, m.setUser, m.validateRequest, signups.signupClient);
 
 // Plans
+router.get('/plans', m.catchError, m.setUser, m.validateRequest, plans.index);
 router.post('/plans', m.checkToken, m.setUser, m.validateRequest, plans.create);
 router.get('/plans/:id', m.checkToken, m.setUser, m.validateRequest, plans.get);
 router.patch('/plans/:id', m.checkToken, m.setUser, m.validateRequest, plans.update);
