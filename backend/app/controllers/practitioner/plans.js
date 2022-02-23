@@ -4,6 +4,10 @@ const index = async (ctx) => {
   const plans = await prisma.plan.findMany({
     where: {
       practitionerId: ctx.practitioner.id
+    },
+    include: {
+      exercises: true,
+      clients: true,
     }
   });
 
