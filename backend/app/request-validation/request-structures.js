@@ -54,7 +54,6 @@ const requestStructures = {
     'POST': new RequestStructure(
       new RequestParameter('repetitions', TypeValidator.INT, true),
       new RequestParameter('timeframe', TypeValidator.TIMEFRAME, true),
-      new RequestParameter('practitionerId', TypeValidator.INT, true),
       new RequestParameter('name', TypeValidator.STRING, true)
     ),
   },

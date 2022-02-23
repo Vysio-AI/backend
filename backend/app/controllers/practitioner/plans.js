@@ -13,14 +13,10 @@ const index = async (ctx) => {
 
 const create = async (ctx) => {
 
-  if (ctx.request.body.practitionerId != ctx.practitioner.id) {
-    ctx.status = 401
-    return
-  }
-
   const plan = await prisma.plan.create({
     data: {
-      ...ctx.request.body
+      ...ctx.request.body,
+      practitionerId: ctx.practitioner.id
     }
   });
 
