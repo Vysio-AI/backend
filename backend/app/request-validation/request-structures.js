@@ -148,6 +148,29 @@ const requestStructures = {
     'GET': new RequestStructure(),
     'DELETE': new RequestStructure(),
   },
+  '/api/v1/invites': {
+    'GET': new RequestStructure(),
+    'POST': new RequestStructure(
+      new RequestParameter('clientEmail', TypeValidator.EMAIL, true),
+      new RequestParameter('clientFirstName', TypeValidator.STRING, true),
+      new RequestParameter('clientLastName', TypeValidator.STRING, true),
+      new RequestParameter('expiry', TypeValidator.DATE_TIME, false),
+    ),
+  },
+  '/api/v1/invites/:id': {
+    'PATCH': new RequestStructure(
+      new RequestParameter('clientEmail', TypeValidator.EMAIL, false),
+      new RequestParameter('clientFirstName', TypeValidator.STRING, false),
+      new RequestParameter('clientLastName', TypeValidator.STRING, false),
+      new RequestParameter('expiry', TypeValidator.DATE_TIME, false),
+      new RequestParameter('status', TypeValidator.INVITE_STATUS, false),
+    ),
+  },
+  '/api/v1/invites/referral': {
+    'POST': new RequestStructure(
+      new RequestParameter('referralCode', TypeValidator.REFERRAL_CODE, true),
+    ),
+  },
 }
 
 module.exports = requestStructures;

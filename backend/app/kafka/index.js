@@ -1,15 +1,19 @@
+const prisma = require('../controllers/prisma-client')
 const { Kafka } = require('kafkajs')
+
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
   brokers: [process.env.BROKER]
 })
 
 const sessionFrames = require('../controllers/client/session-frames');
+const { notificationHandlers } = require('../notifications/index');
 
 const topics = {
   CLASSIFICATIONS: "classifications",
   SESSION_END: "session-end",
   WATCH: "watch",
+  NOTIFICATIONS: "notifications",
 };
 
 const setup = async (socketService) => {
@@ -18,27 +22,31 @@ const setup = async (socketService) => {
 
   await consumer.connect();
 
+  // Subscribe to relevant topics
   await consumer.subscribe({ topic: topics.CLASSIFICATIONS });
   await consumer.subscribe({ topic: topics.SESSION_END });
+  await consumer.subscribe({ topic: topics.NOTIFICATIONS });
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       switch (topic) {
         case topics.CLASSIFICATIONS:
-          processClassifications(topic, partition, message, socketService);
+          await processClassifications(message, socketService);
           break;
         case topics.SESSION_END:
-          processSessionEnd(topic, partition, message, socketService);
+          await processSessionEnd(message, socketService);
+          break;
+        case topics.NOTIFICATIONS:
+          await processNotification(message);
           break;
         default:
-          console.log(topic);
-          console.log("Topic handler not implemented");
+          console.log(`Topic handler not implemented for ${topic}`);
       }
     },
   });
 }
 
-const processClassifications = async (topic, partition, message, socketService) => {
+const processClassifications = async (message, socketService) => {
   // Parse json message
   const jsonMsg = JSON.parse(message.value.toString());
   console.log(jsonMsg);
@@ -50,13 +58,65 @@ const processClassifications = async (topic, partition, message, socketService) 
   // TODO
 }
 
-const processSessionEnd = async (topic, partition, message, socketService) => {
-  // Potential TODO: Create the SessionMetrics record for the session
-  // 1. Clean the session data -> Low pass filter on the sessionFrames
-  // 2. Detect transition points
-  // 3. Update overall client stats
-  // 4. Update the processed state
-  // 5. Send websocket message on sessions:userId to update processed status
+const processNotification = async (message) => {
+  // Parse JSON invite object
+  const notification = JSON.parse(message.value.toString());
+
+  // Get notification type from message
+  const notificationHandler = notificationHandlers[notification.notificationType]
+
+  if (!notificationHandler) {
+    console.log(`No function implemented to process ${notification.notificationType} notifications`);
+    return
+  }
+
+  await notificationHandler(notification)
+}
+
+// Not 100% sure about this, since we might not be finished processing all
+// the session frames for a particular session before we receive this
+// message... But it will work for now...
+const processSessionEnd = async (message, socketService) => {
+  message = JSON.parse(message.value.toString())
+
+  const updateSession = await prisma.session.update({
+    where: {
+      id: message.sessionId
+    },
+    data: {
+      endTime: message.timestamp
+    },
+    include: {
+      flags: true
+    },
+  })
+
+  // Create/update session metrics
+
+  // Produce session summary notification if session is notable
+  if (isNotableSession(updateSession)) {
+    await sendMessage(
+      topics.NOTIFICATIONS,
+      updateSession.practitionerId.toString(),
+      JSON.stringify({
+        notificationType: 'SESSION',
+        sessionId: updateSession.id,
+        clientId: updateSession.clientId,
+        planId: updateSession.planId,
+        practitionerId: updateSession.practitionerId,
+      })
+    )
+  }
+
+  // Emit message over socket to notify frontend that session has been processed
+  socketService.emitter(
+    `sessions:${updateSession.clientId}`,
+    `Session ${updateSession.id} sucessfully processed`
+  );
+}
+
+const isNotableSession = (session) => {
+  return session.flags.length > 0
 }
 
 const sendMessage = async (topic, key, message) => {

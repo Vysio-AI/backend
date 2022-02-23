@@ -26,6 +26,19 @@ function datetimeValidationFn (value) {
   return typeof(value) === "string"
 }
 
+function emailValidationFn (value) {
+  // TODO: Check email is valid
+  return typeof(value) === "string"
+}
+
+function inviteStatusValidationFn (value) {
+  return (typeof(value) === "string" && ["PENDING", "COMPLETED", "CANCELLED"].includes(value))
+}
+
+function referralCodeValidationFn (value) {
+  return (typeof(value) === "string" && value.length === 10)
+}
+
 /*
  * The TypeValidator data structure maps an identifying data type to be 
  * included in a request body to the function that validates it. The
@@ -39,6 +52,9 @@ const TypeValidator = {
   TIMEFRAME: timeframeValidationFn,
   ACTIVITY_TYPE: activityTypeValidationFn,
   DATE_TIME: datetimeValidationFn,
+  EMAIL: emailValidationFn,
+  INVITE_STATUS: inviteStatusValidationFn,
+  REFERRAL_CODE: referralCodeValidationFn,
 }
 
 module.exports = TypeValidator

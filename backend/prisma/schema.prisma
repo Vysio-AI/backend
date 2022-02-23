@@ -11,31 +11,32 @@ generator client {
 }
 
 model Practitioner {
-  id                   Int                               @id @default(autoincrement())
-  createdAt            DateTime                          @default(now())
-  updatedAt            DateTime                          @updatedAt
-  email                String                            @unique
-  firstName            String
-  lastName             String
-  phoneNumber          String?
-  auth0Sub             String                            @unique
-  clients              Client[]
-  plans                Plan[]
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  email       String   @unique
+  firstName   String
+  lastName    String
+  phoneNumber String?
+  auth0Sub    String   @unique
+  clients     Client[]
+  plans       Plan[]
+  invites     Invite[]
 }
 
 model Client {
-  id                   Int                         @id @default(autoincrement())
-  createdAt            DateTime                    @default(now())
-  updatedAt            DateTime                    @updatedAt
-  email                String                      @unique
-  firstName            String
-  lastName             String
-  phoneNumber          String?
-  auth0Sub             String                      @unique
-  sessions             Session[]
-  plans                Plan[]
-  Practitioner         Practitioner?               @relation(fields: [practitionerId], references: [id])
-  practitionerId       Int?
+  id             Int           @id @default(autoincrement())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  email          String        @unique
+  firstName      String
+  lastName       String
+  phoneNumber    String?
+  auth0Sub       String        @unique
+  sessions       Session[]
+  plans          Plan[]
+  Practitioner   Practitioner? @relation(fields: [practitionerId], references: [id])
+  practitionerId Int?
 }
 
 model Session {
@@ -46,7 +47,7 @@ model Session {
   endTime        DateTime?
   sessionFrames  SessionFrame[]
   flags          Flag[]
-  Client         Client      @relation(fields: [clientId], references: [id])
+  Client         Client         @relation(fields: [clientId], references: [id])
   clientId       Int
   planId         Int
   practitionerId Int
@@ -54,9 +55,9 @@ model Session {
 }
 
 model SessionFrame {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   startTime  DateTime
   endTime    DateTime
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
@@ -66,25 +67,25 @@ model SessionFrame {
 }
 
 model Flag {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  time       DateTime
-  notes      String?
-  Session    Session  @relation(fields: [sessionId], references: [id])
-  sessionId  Int
-  clientId   Int
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  time           DateTime
+  notes          String?
+  Session        Session  @relation(fields: [sessionId], references: [id])
+  sessionId      Int
+  clientId       Int
   practitionerId Int
 }
 
 model Video {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  fileName   String
-  Session    Session  @relation(fields: [sessionId], references: [id])
-  sessionId  Int
-  clientId   Int
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  fileName       String
+  Session        Session  @relation(fields: [sessionId], references: [id])
+  sessionId      Int      @unique
+  clientId       Int
   practitionerId Int
 }
 
@@ -104,25 +105,25 @@ model Exercise {
   updatedAt     DateTime       @updatedAt
   activityType  ActivityType
   duration      Int
-  Plan          Plan      @relation(fields: [planId], references: [id])
+  Plan          Plan           @relation(fields: [planId], references: [id])
   planId        Int
   sessionFrames SessionFrame[]
 }
 
 model Plan {
-  id                  Int        @id @default(autoincrement())
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-  active              Boolean    @default(false)
-  activatedAt         DateTime?
-  deactivatedAt       DateTime?
-  repetitions         Int
-  name                String
-  timeframe           TimeFrame
-  Practitioner        Practitioner     @relation(fields: [practitionerId], references: [id])
-  practitionerId      Int
-  clients             Client[]
-  exercises           Exercise[]
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  active         Boolean      @default(false)
+  activatedAt    DateTime?
+  deactivatedAt  DateTime?
+  repetitions    Int
+  name           String
+  timeframe      TimeFrame
+  Practitioner   Practitioner @relation(fields: [practitionerId], references: [id])
+  practitionerId Int
+  clients        Client[]
+  exercises      Exercise[]
 }
 
 enum TimeFrame {
@@ -130,4 +131,26 @@ enum TimeFrame {
   WEEKLY
   BIWEEKLY
   MONTHLY
+}
+
+enum InviteStatus {
+  QUEUED
+  SENT
+  FAILED
+  COMPLETED
+  EXPIRED
+}
+
+model Invite {
+  id              Int          @id @default(autoincrement())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  expiry          DateTime     @default(dbgenerated("NOW() + interval '1 week'"))
+  status          InviteStatus @default(QUEUED)
+  Practitioner    Practitioner @relation(fields: [practitionerId], references: [id])
+  practitionerId  Int
+  clientEmail     String       @unique
+  clientFirstName String
+  clientLastName  String
+  referralCode    String
 }

@@ -10,7 +10,8 @@ const {
   sessions,
   sessionFrames,
   flags,
-  videos
+  videos,
+  invites
 } = require('../controllers/main');
 
 // Import middlewares
@@ -78,5 +79,11 @@ router.delete('/flags/:id', m.checkToken, m.setUser, m.validateRequest, flags.de
 router.post('/videos', m.checkToken, m.setUser, m.validateRequest, videos.create);
 router.get('/videos/:id', m.checkToken, m.setUser, m.validateRequest, videos.get);
 router.delete('/videos/:id', m.checkToken, m.setUser, m.validateRequest, videos.destroy);
+
+// Invites
+router.get('/invites', m.checkToken, m.setUser, m.validateRequest, invites.index);
+router.post('/invites', m.checkToken, m.setUser, m.validateRequest, invites.create);
+router.patch('/invites/:id', m.checkToken, m.setUser, m.validateRequest, invites.update);
+router.post('/invites/referral', m.checkToken, m.setUser, m.validateRequest, invites.validateReferral);
 
 module.exports = router
