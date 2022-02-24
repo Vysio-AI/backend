@@ -34,6 +34,10 @@ const get = async (ctx) => {
   const plan = await prisma.plan.findUnique({
     where: {
       id: planId
+    },
+    include: {
+      exercises: true,
+      clients: true,
     }
   });
 
