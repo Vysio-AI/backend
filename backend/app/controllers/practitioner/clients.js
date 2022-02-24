@@ -20,19 +20,17 @@ const index = async (ctx) => {
 const get = async (ctx) => {
   const clientId = parseInt(ctx.params.id);
 
-  // Check client is associated with practitioner making request
-  if (ctx.practitioner.clients.every((client) => {
-    client.id != clientId
-  })) {
-    ctx.status = 401;
-    return
-  }
-
   const client = await prisma.client.findUnique({
     where: {
       id: clientId
     }
   });
+
+  // Check client is associated with practitioner making request
+  if (ctx.practitioner.id != client.practitionerId) {
+    ctx.status = 401;
+    return
+  }
 
   delete client.auth0Sub;
 
