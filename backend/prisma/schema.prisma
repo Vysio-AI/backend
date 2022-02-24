@@ -152,5 +152,5 @@ model Invite {
   clientEmail     String       @unique
   clientFirstName String
   clientLastName  String
-  referralCode    String
+  referralCode    String       @unique
 }

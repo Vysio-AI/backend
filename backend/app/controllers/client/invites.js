@@ -5,12 +5,11 @@ const validateReferral = async (ctx) => {
   const invite = await prisma.invite.findUnique({
     where: {
       referralCode: ctx.request.body.referralCode,
-      status: "SENT"
     }
   });
 
   // If no pending invite matched the given referral code
-  if (!invite) {
+  if (!invite || invite.status != "SENT") {
     ctx.body = {
       "err": "No invite matching referral code used."
     }
