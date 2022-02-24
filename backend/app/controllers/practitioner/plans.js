@@ -56,22 +56,30 @@ const update = async (ctx) => {
 }
 
 const destroy = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const planId = parseInt(ctx.params.id);
 
   const plan = await prisma.plan.findUnique({
     where: {
-      id: id
+      id: planId
     }
   });
 
+  // Check that practitioner owns plan
   if (ctx.practitioner.id !== plan.practitionerId) {
     ctx.status = 401;
     return
   }
 
+  // Cascade delete any exercises on this plan
+  await prisma.exercise.delete({
+    where: {
+      planId: planId
+    }
+  })
+
   await prisma.plan.delete({
     where: {
-      id: id
+      id: planId
     }
   });
 
