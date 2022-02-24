@@ -71,7 +71,7 @@ const destroy = async (ctx) => {
   }
 
   // Cascade delete any exercises on this plan
-  await prisma.exercise.delete({
+  await prisma.exercise.deleteMany({
     where: {
       planId: planId
     }
