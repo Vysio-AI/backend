@@ -294,9 +294,11 @@ module.exports = {
       )
     },
     validateReferral: function(ctx) {
-      ctx,
-      clientsController.invites.validateReferral,
-      null
+      return callUserTypeFunction(
+        ctx,
+        clientsController.invites.validateReferral,
+        null
+      )
     },
   },
 }
