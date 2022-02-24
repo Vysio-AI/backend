@@ -29,24 +29,42 @@ const create = async (ctx) => {
 }
 
 const get = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const planId = parseInt(ctx.params.id);
+
   const plan = await prisma.plan.findUnique({
     where: {
-      id: id,
-      practitionerId: ctx.practitioner.id
+      id: planId
     }
   });
+
+  // Check that practitioner owns plan
+  if (ctx.practitioner.id !== plan.practitionerId) {
+    ctx.status = 401;
+    return
+  }
 
   ctx.body = plan;
   ctx.status = 200;
 }
 
 const update = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const planId = parseInt(ctx.params.id);
+
+  const plan = await prisma.plan.findUnique({
+    where: {
+      id: planId
+    }
+  });
+
+  // Check that practitioner owns plan
+  if (ctx.practitioner.id !== plan.practitionerId) {
+    ctx.status = 401;
+    return
+  }
+
   const updateplan = await prisma.plan.update({
     where: {
-      id: id,
-      practitionerId: ctx.practitioner.id
+      id: planId
     },
     data: ctx.request.body
   });
