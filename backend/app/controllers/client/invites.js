@@ -33,7 +33,7 @@ const validateReferral = async (ctx) => {
       id: ctx.client.id
     },
     data: {
-      practitionerId: updateInvite.practitionerId
+      practitionerId: invite.practitionerId
     }
   });
 
