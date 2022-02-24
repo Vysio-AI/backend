@@ -57,10 +57,21 @@ const update = async (ctx) => {
 
 const destroy = async (ctx) => {
   const id = parseInt(ctx.params.id);
+
+  const plan = await prisma.plan.findUnique({
+    where: {
+      id: id
+    }
+  });
+
+  if (ctx.practitioner.id !== plan.practitionerId) {
+    ctx.status = 401;
+    return
+  }
+
   await prisma.plan.delete({
     where: {
-      id: id,
-      practitionerId: ctx.practitioner.id
+      id: id
     }
   });
 
