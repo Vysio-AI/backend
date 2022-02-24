@@ -3,11 +3,22 @@ const prisma = require('../prisma-client');
 const create = async (ctx) => {
 
   // Check if req planId belongs to practitioner
-  if (ctx.practitioner.plans.every((plan) => {
-    plan.id != ctx.request.body.planId
-  })) {
-    ctx.status = 401;
-    return
+  const plan = await prisma.plan.findUnique({
+    where: {
+      id: ctx.request.body.planId
+    }
+  });
+
+  if (!plan) {
+    ctx.status = 404
+    ctx.body = {
+      "error": "Plan does not exist"
+    }
+  } else if (plan.practitionerId != ctx.practitioner.id) {
+    ctx.status = 401
+    ctx.body = {
+      "error": "unauthorized"
+    }
   }
 
   const exercise = await prisma.exercise.create({
