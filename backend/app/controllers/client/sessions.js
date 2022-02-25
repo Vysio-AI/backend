@@ -9,6 +9,11 @@ const index = async (ctx) => {
     }
   });
 
+  // Remove private practitioner notes
+  for (let session in sessions) {
+    delete session.privatePractitionerNotes;
+  }
+
   ctx.body = sessions;
   ctx.status = 200
 }
@@ -35,6 +40,9 @@ const get = async (ctx) => {
       id: id
     }
   });
+
+  // Remove private practitioner notes
+  delete session.privatePractitionerNotes;
 
   ctx.body = session;
   ctx.status = 200;
