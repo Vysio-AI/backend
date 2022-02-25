@@ -32,17 +32,26 @@ const create = async (ctx) => {
 }
 
 const get = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const exerciseId = parseInt(ctx.params.id);
 
   const exercise = await prisma.exercise.findUnique({
     where: {
-      id: id
+      id: exerciseId
     }
   });
 
-  if (ctx.practitioner.plans.every((plan) => {
-    plan.id != exercise.planId
-  })) {
+  if (!exercise) {
+    ctx.status = 404;
+    return
+  }
+
+  const plan = await prisma.plan.findUnique({
+    where: {
+      id: exercise.planId
+    }
+  })
+
+  if (!plan || plan.practitionerId !== ctx.practitioner.id) {
     ctx.status = 401;
     return
   }
@@ -52,24 +61,33 @@ const get = async (ctx) => {
 }
 
 const update = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const exerciseId = parseInt(ctx.params.id);
 
   const exercise = await prisma.exercise.findUnique({
     where: {
-      id: id
+      id: exerciseId
     }
   });
 
-  if (ctx.practitioner.plans.every((plan) => {
-    plan.id != exercise.planId
-  })) {
+  if (!exercise) {
+    ctx.status = 404;
+    return
+  }
+
+  const plan = await prisma.plan.findUnique({
+    where: {
+      id: exercise.planId
+    }
+  })
+
+  if (!plan || plan.practitionerId !== ctx.practitioner.id) {
     ctx.status = 401;
     return
   }
 
   const updateExercise = await prisma.exercise.update({
     where: {
-      id: id
+      id: exerciseId
     },
     data: ctx.request.body
   });
@@ -79,24 +97,33 @@ const update = async (ctx) => {
 }
 
 const destroy = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const exerciseId = parseInt(ctx.params.id);
 
   const exercise = await prisma.exercise.findUnique({
     where: {
-      id: id
+      id: exerciseId
     }
   });
 
-  if (ctx.practitioner.plans.every((plan) => {
-    plan.id != exercise.planId
-  })) {
+  if (!exercise) {
+    ctx.status = 404;
+    return
+  }
+
+  const plan = await prisma.plan.findUnique({
+    where: {
+      id: exercise.planId
+    }
+  })
+
+  if (!plan || plan.practitionerId !== ctx.practitioner.id) {
     ctx.status = 401;
     return
   }
 
   await prisma.exercise.delete({
     where: {
-      id: id
+      id: exerciseId
     }
   });
 
