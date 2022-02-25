@@ -76,7 +76,9 @@ const getAllPlans = async (ctx) => {
     },
     include: {
       plans: {
-        include: exercises
+        include: {
+          exercises: true
+        }
       }
     }
   });
