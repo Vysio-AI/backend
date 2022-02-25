@@ -1,5 +1,6 @@
 const prisma = require('../prisma-client');
 const storage = require('../../storage/index');
+const { addSession } = require('../../redis/cache');
 
 const index = async (ctx) => {
   const sessions = await prisma.session.findMany({
@@ -19,6 +20,9 @@ const create = async (ctx) => {
       ...ctx.request.body
     }
   });
+
+  // Add session to cache
+  await addSession(ctx.client.id, session);
 
   ctx.body = session;
   ctx.status = 200

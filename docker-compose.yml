@@ -65,6 +65,13 @@ services:
     depends_on:
       - zoo1
 
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass redis
+
   spark:
     build: ./spark
     container_name: spark
