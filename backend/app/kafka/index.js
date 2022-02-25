@@ -1,5 +1,6 @@
 const prisma = require('../controllers/prisma-client')
 const { Kafka } = require('kafkajs')
+const { getExerciseId } = require('../redis/cache');
 
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
@@ -48,14 +49,37 @@ const setup = async (socketService) => {
 
 const processClassifications = async (message, socketService) => {
   // Parse json message
-  const jsonMsg = JSON.parse(message.value.toString());
-  console.log(jsonMsg);
+  var jsonMsg = JSON.parse(message.value.toString());
 
-  // Emit to sessionFrame socket
-  socketService.emitter(`sessionFrame:${jsonMsg.session_id}`, jsonMsg);
+  const exerciseId = await getExerciseId(
+    jsonMsg["client_id"],
+    jsonMsg["session_id"],
+    jsonMsg["activity"]
+  )
 
-  // Persist to database
-  // TODO
+  // Session frame was classified as an activity that's not in the session's
+  // plan
+  if (!exerciseId) {
+    return
+  }
+
+  const msg = {
+    exerciseId: exerciseId,
+    start: jsonMsg["window"]["start"],
+    end: jsonMsg["window"]["end"]
+  }
+
+  // Emit to session-frame socket
+  socketService.emitter('session-frame:${sessionId}', msg);
+
+  await prisma.sessionFrame.create({
+    data: {
+      startTime: jsonMsg["window"]["start"],
+      endTime: jsonMsg["window"]["end"],
+      exerciseId: exerciseId,
+      sessionId: jsonMsg["session_id"],
+    }
+  });
 }
 
 const processNotification = async (message) => {
