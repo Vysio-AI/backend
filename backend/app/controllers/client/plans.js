@@ -8,6 +8,7 @@ const get = async (ctx) => {
     },
     include: {
       clients: true,
+      exercises: true,
     }
   });
 
