@@ -32,6 +32,7 @@ model Client {
   firstName      String
   lastName       String
   phoneNumber    String?
+  imageUrl       String?
   auth0Sub       String        @unique
   sessions       Session[]
   plans          Plan[]
