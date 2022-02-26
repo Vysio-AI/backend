@@ -116,7 +116,8 @@ const processSessionEnd = async (message, socketService) => {
       id: message.sessionId
     },
     data: {
-      endTime: message.timestamp
+      endTime: message.timestamp,
+      status: 'COMPLETED',
     },
     include: {
       flags: true
@@ -144,11 +145,17 @@ const processSessionEnd = async (message, socketService) => {
     )
   }
 
+  await prisma.session.update({
+    where: {
+      id: message.sessionId
+    },
+    data: {
+      status: 'PROCESSED'
+    }
+  })
+
   // Emit message over socket to notify frontend that session has been processed
-  socketService.emitter(
-    `sessions:${updateSession.clientId}`,
-    `Session ${updateSession.id} sucessfully processed`
-  );
+  socketService.emitter(`sessions:${updateSession.id}`, 'PROCESSED');
 }
 
 const isNotableSession = (session) => {

@@ -39,6 +39,10 @@ function referralCodeValidationFn (value) {
   return (typeof(value) === "string" && value.length === 10)
 }
 
+function sessionStatusValidationFn (value) {
+  return (typeof(value) === "string" && ["IN_PROGRESS", "COMPLETED", "PROCESSED"].includes(value))
+}
+
 /*
  * The TypeValidator data structure maps an identifying data type to be 
  * included in a request body to the function that validates it. The
@@ -55,6 +59,7 @@ const TypeValidator = {
   EMAIL: emailValidationFn,
   INVITE_STATUS: inviteStatusValidationFn,
   REFERRAL_CODE: referralCodeValidationFn,
+  SESSION_STATUS: sessionStatusValidationFn,
 }
 
 module.exports = TypeValidator
