@@ -25,25 +25,40 @@ const index = async (ctx) => {
 }
 
 const get = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const sessionId = parseInt(ctx.params.id);
 
   const session = await prisma.session.findUnique({
     where: {
-      id: id,
-      practitionerId: ctx.practitioner.id
+      id: sessionId,
     }
   });
+
+  if (session.practitionerId !== ctx.practitioner.id) {
+    ctx.status = 401
+    return
+  }
 
   ctx.body = session;
   ctx.status = 200;
 }
 
 const update = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const sessionId = parseInt(ctx.params.id);
+
+  const session = await prisma.session.findUnique({
+    where: {
+      id: sessionId
+    }
+  })
+
+  if (session.practitionerId !== ctx.practitioner.id) {
+    ctx.status = 401
+    return
+  }
+
   const updateSession = await prisma.session.update({
     where: {
-      id: id,
-      practitionerId: ctx.practitioner.id
+      id: sessionId,
     },
     data: ctx.request.body
   });
@@ -53,11 +68,11 @@ const update = async (ctx) => {
 }
 
 const destroy = async (ctx) => {
-  const id = parseInt(ctx.params.id);
+  const sessionId = parseInt(ctx.params.id);
 
   const session = await prisma.session.findUnique({
     where: {
-      id: id
+      id: sessionId
     }
   });
 
@@ -69,7 +84,7 @@ const destroy = async (ctx) => {
   // Delete video
   const video = await prisma.video.delete({
     where: {
-      sessionId: id
+      sessionId: sessionId
     }
   });
 
@@ -79,7 +94,7 @@ const destroy = async (ctx) => {
   // Delete session
   await prisma.session.delete({
     where: {
-      id: id
+      id: sessionId
     }
   });
 
