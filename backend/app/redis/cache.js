@@ -11,11 +11,11 @@ const activityTypeIndex = {
   UPRIGHT_ROW: 6
 }
 
-const createSessionKey = (clientId, sessionId, activityTypeIndex) => {
+const createExerciseKey = (clientId, sessionId, activityTypeIndex) => {
   return `${clientId}:${sessionId}:${activityTypeIndex}`
 }
 
-const addSession = async (clientId, session) => {
+const addSessionExercises = async (clientId, session) => {
   const plan = await prisma.plan.findUnique({
     where: {
       id: session.planId,
@@ -28,19 +28,35 @@ const addSession = async (clientId, session) => {
   // Add relevant activityIndex/exerciseId mappings to redis
   await Promise.all(plan.exercises.map(async (exercise) => {
     const activityType = activityTypeIndex[exercise.activityType];
-    const sessionKey = createSessionKey(clientId, session.id, activityType);
+    const sessionKey = createExerciseKey(clientId, session.id, activityType);
     await client.set(sessionKey, exercise.id);
   }));
 }
 
 const getExerciseId = async (clientId, sessionId, activityTypeIndex) => {
-  const sessionKey = createSessionKey(clientId, sessionId, activityTypeIndex);
+  const sessionKey = createExerciseKey(clientId, sessionId, activityTypeIndex);
 
   const exerciseId = await client.get(sessionKey);
   return exerciseId ? parseInt(exerciseId) : exerciseId
 }
 
+const createSessionEndKey = (clientId, sessionId) => {
+  return `${clientId}:${sessionId}`
+}
+
+const addSessionEnd = async (clientId, sessionId) => {
+  const sessionEndKey = createSessionEndKey(clientId, sessionId);
+  await client.set(sessionEndKey, 1);
+}
+
+const isSessionEnded = async (clientId, sessionId) => {
+  const sessionEndKey = createSessionEndKey(clientId, sessionId);
+  return await client.get(sessionEndKey) ? true : false
+}
+
 module.exports = {
-  addSession,
+  addSessionExercises,
   getExerciseId,
+  addSessionEnd,
+  isSessionEnded,
 }
