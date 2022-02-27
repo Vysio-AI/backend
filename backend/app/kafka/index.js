@@ -1,6 +1,7 @@
 const prisma = require('../controllers/prisma-client')
 const { Kafka } = require('kafkajs')
-const { getExerciseId } = require('../redis/cache');
+const { getExerciseId, addSessionEnd, isSessionEnded } = require('../redis/cache');
+const { aggregateSessionFrames } = require('../job-processors/session-processor');
 
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
@@ -50,6 +51,11 @@ const setup = async (socketService) => {
 const processClassifications = async (message, socketService) => {
   // Parse json message
   var jsonMsg = JSON.parse(message.value.toString());
+
+  // If session is ended, ignore the incoming classification
+  if (isSessionEnded(jsonMsg["client_id"], jsonMsg["session_id"])) {
+    return
+  }
 
   const exerciseId = await getExerciseId(
     jsonMsg["client_id"],
@@ -103,17 +109,24 @@ const processNotification = async (message) => {
 const processSessionEnd = async (message, socketService) => {
   message = JSON.parse(message.value.toString())
 
+  await addSessionEnd(jsonMsg["client_id"], jsonMsg["session_id"]);
+
   const updateSession = await prisma.session.update({
     where: {
       id: message.sessionId
     },
     data: {
-      endTime: message.timestamp
+      endTime: message.timestamp,
+      status: 'COMPLETED',
     },
     include: {
       flags: true
     },
   })
+
+  // Aggregate session frames to reduce number of records in database and
+  // introduce natural breakpoints
+  await aggregateSessionFrames(updateSession.id);
 
   // Create/update session metrics
 
@@ -132,11 +145,17 @@ const processSessionEnd = async (message, socketService) => {
     )
   }
 
+  await prisma.session.update({
+    where: {
+      id: message.sessionId
+    },
+    data: {
+      status: 'PROCESSED'
+    }
+  })
+
   // Emit message over socket to notify frontend that session has been processed
-  socketService.emitter(
-    `sessions:${updateSession.clientId}`,
-    `Session ${updateSession.id} sucessfully processed`
-  );
+  socketService.emitter(`sessions:${updateSession.id}`, 'PROCESSED');
 }
 
 const isNotableSession = (session) => {

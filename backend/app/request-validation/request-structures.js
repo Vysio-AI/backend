@@ -94,6 +94,7 @@ const requestStructures = {
     'POST': new RequestStructure(
       new RequestParameter('startTime', TypeValidator.DATE_TIME, true),
       new RequestParameter('endTime', TypeValidator.DATE_TIME, false),
+      new RequestParameter('status', TypeValidator.SESSION_STATUS, false),
       new RequestParameter('clientId', TypeValidator.INT, true),
       new RequestParameter('planId', TypeValidator.INT, true),
       new RequestParameter('practitionerId', TypeValidator.INT, true),
@@ -107,7 +108,7 @@ const requestStructures = {
     'PATCH': new RequestStructure(
       new RequestParameter('startTime', TypeValidator.DATE_TIME, false),
       new RequestParameter('endTime', TypeValidator.DATE_TIME, false),
-      new RequestParameter('processed', TypeValidator.BOOLEAN, false),
+      new RequestParameter('status', TypeValidator.SESSION_STATUS, false),
       new RequestParameter('clientId', TypeValidator.INT, false),
       new RequestParameter('planId', TypeValidator.INT, false),
       new RequestParameter('practitionerId', TypeValidator.INT, false),
