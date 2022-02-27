@@ -118,6 +118,11 @@ const requestStructures = {
     ),
     'DELETE': new RequestStructure(),
   },
+  '/api/v1/sessions/:id/end': {
+    'POST': new RequestStructure(
+      new RequestParameter('endTime', TypeValidator.DATE_TIME, true),
+    ),
+  },
   '/api/v1/sessions/:id/session-frames': {
     'GET': new RequestStructure(),
   },

@@ -194,6 +194,13 @@ module.exports = {
         practitionersController.sessions.destroy,
       )
     },
+    end: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        clientsController.sessions.end,
+        null
+      )
+    },
     getAllSessionFrames: function(ctx) {
       return callUserTypeFunction(
         ctx,

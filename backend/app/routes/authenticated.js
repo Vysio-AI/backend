@@ -63,6 +63,7 @@ router.post('/sessions', m.checkToken, m.setUser, m.validateRequest, sessions.cr
 router.get('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.get);
 router.patch('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.update);
 router.delete('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.destroy);
+router.post('/sessions/:id/end', m.checkToken, m.setUser, m.validateRequest, sessions.end);
 router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, m.validateRequest, sessions.getAllSessionFrames);
 router.get('/sessions/:id/flags', m.checkToken, m.setUser, m.validateRequest, sessions.getAllFlags);
 

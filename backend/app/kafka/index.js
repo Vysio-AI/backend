@@ -109,38 +109,32 @@ const processNotification = async (message) => {
 const processSessionEnd = async (message, socketService) => {
   message = JSON.parse(message.value.toString())
 
-  await addSessionEnd(jsonMsg["client_id"], jsonMsg["session_id"]);
-
-  const updateSession = await prisma.session.update({
+  const session = await prisma.session.findUnique({
     where: {
       id: message.sessionId
     },
-    data: {
-      endTime: message.timestamp,
-      status: 'COMPLETED',
-    },
     include: {
-      flags: true
-    },
-  })
+      flags: true,
+    }
+  });
 
   // Aggregate session frames to reduce number of records in database and
   // introduce natural breakpoints
-  await aggregateSessionFrames(updateSession.id);
+  await aggregateSessionFrames(session.id);
 
   // Create/update session metrics
 
   // Produce session summary notification if session is notable
-  if (isNotableSession(updateSession)) {
+  if (isNotableSession(session)) {
     await sendMessage(
       topics.NOTIFICATIONS,
-      updateSession.practitionerId.toString(),
+      session.practitionerId.toString(),
       JSON.stringify({
         notificationType: 'SESSION',
-        sessionId: updateSession.id,
-        clientId: updateSession.clientId,
-        planId: updateSession.planId,
-        practitionerId: updateSession.practitionerId,
+        sessionId: session.id,
+        clientId: session.clientId,
+        planId: session.planId,
+        practitionerId: session.practitionerId,
       })
     )
   }

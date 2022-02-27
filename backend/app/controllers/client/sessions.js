@@ -1,6 +1,7 @@
 const prisma = require('../prisma-client');
 const storage = require('../../storage/index');
-const { addSessionExercises } = require('../../redis/cache');
+const { addSessionExercises, addSessionEnd } = require('../../redis/cache');
+const { topics, sendMessage } = require('../../kafka/index');
 
 const index = async (ctx) => {
   const sessions = await prisma.session.findMany({
@@ -92,6 +93,31 @@ const destroy = async (ctx) => {
   ctx.status = 204;
 }
 
+const end = async (ctx) => {
+  const sessionId = parseInt(ctx.params.id);
+
+  const updateSession = await prisma.session.update({
+    where: {
+      id: sessionId
+    },
+    data: {
+      ...ctx.request.body,
+      status: 'COMPLETED'
+    }
+  });
+
+  // Add session end flag to redis
+  await addSessionEnd(ctx.client.id, sessionId);
+
+  // Produce session end message to kafka
+  const key = ctx.client.id.toString();
+  const msg = JSON.stringify({'sessionId': updateSession.id})
+  await sendMessage(topics.SESSION_END, key, msg);
+
+  ctx.body = updateSession;
+  ctx.status = 200;
+}
+
 const getAllSessionFrames = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
 
@@ -146,6 +172,7 @@ module.exports = {
   get,
   update,
   destroy,
+  end,
   getAllSessionFrames,
   getAllFlags
 };
