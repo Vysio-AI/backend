@@ -87,6 +87,9 @@ const getAllPlans = async (ctx) => {
   const client = await prisma.client.findUnique({
     where: {
       id: clientId
+    },
+    select: {
+      plans: true
     }
   });
 
@@ -95,13 +98,7 @@ const getAllPlans = async (ctx) => {
     return
   }
 
-  const plans = await prisma.plan.findMany({
-    where: {
-      clientId: clientId
-    }
-  });
-
-  ctx.body = plans;
+  ctx.body = client.plans;
   ctx.status = 200;
 }
 
@@ -112,6 +109,9 @@ const getAllSessions = async (ctx) => {
   const client = await prisma.client.findUnique({
     where: {
       id: clientId
+    },
+    select: {
+      sessions: true
     }
   });
 
@@ -120,13 +120,7 @@ const getAllSessions = async (ctx) => {
     return
   }
 
-  const sessions = await prisma.session.findMany({
-    where: {
-      clientId: clientId
-    }
-  });
-
-  ctx.body = sessions;
+  ctx.body = client.sessions;
   ctx.status = 200;
 }
 
