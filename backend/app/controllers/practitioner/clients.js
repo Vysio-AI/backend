@@ -89,7 +89,12 @@ const getAllPlans = async (ctx) => {
       id: clientId
     },
     include: {
-      plans: true
+      plans: {
+        include: {
+          exercises: true,
+          clients: true,
+        }
+      }
     }
   });
 
