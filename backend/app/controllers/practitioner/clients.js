@@ -84,9 +84,13 @@ const getAllPlans = async (ctx) => {
   const clientId = parseInt(ctx.params.id);
 
   // Check client is associated with practitioner making request
-  if (ctx.practitioner.clients.every((client) => {
-    client.id != clientId
-  })) {
+  const client = await prisma.client.findUnique({
+    where: {
+      clientId: clientId
+    }
+  });
+
+  if (client.practitionerId !== ctx.practitioner.id) {
     ctx.status = 401;
     return
   }
@@ -105,9 +109,13 @@ const getAllSessions = async (ctx) => {
   const clientId = parseInt(ctx.params.id);
 
   // Check client is associated with practitioner making request
-  if (ctx.practitioner.clients.every((client) => {
-    client.id != clientId
-  })) {
+  const client = await prisma.client.findUnique({
+    where: {
+      clientId: clientId
+    }
+  });
+
+  if (client.practitionerId !== ctx.practitioner.id) {
     ctx.status = 401;
     return
   }
