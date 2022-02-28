@@ -88,7 +88,7 @@ const getAllPlans = async (ctx) => {
     where: {
       id: clientId
     },
-    select: {
+    include: {
       plans: true
     }
   });
@@ -110,7 +110,7 @@ const getAllSessions = async (ctx) => {
     where: {
       id: clientId
     },
-    select: {
+    include: {
       sessions: true
     }
   });
