@@ -86,7 +86,7 @@ const getAllPlans = async (ctx) => {
   // Check client is associated with practitioner making request
   const client = await prisma.client.findUnique({
     where: {
-      clientId: clientId
+      id: clientId
     }
   });
 
@@ -111,7 +111,7 @@ const getAllSessions = async (ctx) => {
   // Check client is associated with practitioner making request
   const client = await prisma.client.findUnique({
     where: {
-      clientId: clientId
+      id: clientId
     }
   });
 
