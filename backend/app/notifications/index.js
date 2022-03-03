@@ -1,7 +1,7 @@
 const { sendEmail, emailTemplates } = require('../email/index');
 const prisma = require('../controllers/prisma-client');
 
-const inviteNotificationHandler = async (notification) => {
+const inviteNotificationHandler = async (notification, socketService) => {
   const practitioner = await prisma.practitioner.findUnique({
     where: {
       id: parseInt(notification.practitionerId),
@@ -28,7 +28,7 @@ const inviteNotificationHandler = async (notification) => {
   const inviteStatus = isSent ? 'SENT' : 'FAILED'
 
   // Update invite record with relevant status
-  await prisma.invite.update({
+  const updatedInvite = await prisma.invite.update({
     where: {
       id: notification.id
     },
@@ -36,13 +36,21 @@ const inviteNotificationHandler = async (notification) => {
       status: inviteStatus
     }
   });
+
+  socketService.emitter(
+    `invites:${practitioner.id}`,
+    {
+      inviteId: updatedInvite.id,
+      status: inviteStatus,
+    }
+  )
 }
 
 const getSessionUrl = (sessionId) => {
   return `https://vysio.ca/dashboard/sessions/${sessionId}`
 }
 
-const sessionNotificationHandler = async (notification) => {
+const sessionNotificationHandler = async (notification, socketService) => {
   const client = await prisma.client.findUnique({
     where: {
       id: notification.clientId,

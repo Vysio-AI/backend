@@ -39,7 +39,7 @@ const setup = async (socketService) => {
           await processSessionEnd(message, socketService);
           break;
         case topics.NOTIFICATIONS:
-          await processNotification(message);
+          await processNotification(message, socketService);
           break;
         default:
           console.log(`Topic handler not implemented for ${topic}`);
@@ -88,7 +88,7 @@ const processClassifications = async (message, socketService) => {
   });
 }
 
-const processNotification = async (message) => {
+const processNotification = async (message, socketService) => {
   // Parse JSON invite object
   const notification = JSON.parse(message.value.toString());
 
@@ -100,7 +100,7 @@ const processNotification = async (message) => {
     return
   }
 
-  await notificationHandler(notification)
+  await notificationHandler(notification, socketService)
 }
 
 // Not 100% sure about this, since we might not be finished processing all
