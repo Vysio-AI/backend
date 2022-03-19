@@ -2,9 +2,21 @@ const prisma = require('../prisma-client');
 const storage = require('../../storage/index');
 
 const create = async (ctx) => {
+  const fileName = ctx.request.body.fileName;
+  const clientId = ctx.client.id;
+  const practitionerId = ctx.client.practitionerId;
+  const sessionId = ctx.request.body.sessionId;
+
   const video = await prisma.video.create({
     data: {
-      ...ctx.request.body
+      fileName: fileName,
+      clientId: clientId,
+      practitionerId: practitionerId,
+      Session: {
+        connect: {
+          id: sessionId
+        }
+      }
     }
   });
 
