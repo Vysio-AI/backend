@@ -38,6 +38,16 @@ const get = async (ctx) => {
     return
   }
 
+  if (session && session.status == "COMPLETED") {
+    const video = await prisma.video.findUnique({
+      where: {
+        sessionId: session.id
+      }
+    })
+    session.videoId = video.id;
+    session.videoFileName = video.fileName
+  }
+  
   ctx.body = session;
   ctx.status = 200;
 }
