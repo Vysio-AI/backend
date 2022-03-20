@@ -36,7 +36,7 @@ df = spark \
     .format("kafka") \
     .option("kafka.bootstrap.servers", f"{kafka_host}:{kafka_port}") \
     .option("subscribe", KafkaTopic.WATCH.value) \
-    .option("failOnDataLoss", "false") \
+    .option("failOnDataLoss", False) \
     .load() \
     .selectExpr("CAST(key AS STRING) AS user_id", "CAST(value AS STRING)") \
     .withColumn("json", from_json("value", schema)) \
