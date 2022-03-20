@@ -38,6 +38,11 @@ class SocketService {
 
       socket.on('session-frame', (msg) => {
         console.log(msg);
+
+        const key = 1;
+        const value = JSON.stringify(msg);
+
+        kafka.sendMessage(kafka.topics.WATCH, key, value);
       })
     });
   }
