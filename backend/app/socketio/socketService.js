@@ -35,6 +35,10 @@ class SocketService {
 
         kafka.sendMessage(kafka.topics.WATCH, key, value);
       });
+
+      socket.on('session-frame', (msg) => {
+        console.log(msg);
+      })
     });
   }
 
