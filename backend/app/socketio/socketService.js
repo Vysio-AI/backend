@@ -39,7 +39,7 @@ class SocketService {
       socket.on('session-frame', (msg) => {
         console.log(msg);
 
-        const key = "1";
+        const key = msg.user_id.toString();
         const value = JSON.stringify(msg);
 
         kafka.sendMessage(kafka.topics.WATCH, key, value);
