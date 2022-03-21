@@ -60,5 +60,6 @@ df = spark \
     .option("kafka.bootstrap.servers", f"{kafka_host}:{kafka_port}") \
     .option("topic", KafkaTopic.CLASSIFICATIONS.value) \
     .option("checkpointLocation", "./checkpoint") \
+    .trigger(continuous = "5 seconds") \
     .start() \
     .awaitTermination()
