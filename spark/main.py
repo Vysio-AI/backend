@@ -52,6 +52,7 @@ df = spark \
         collect_list("w_x").alias("w_x"),
         collect_list("w_y").alias("w_y"),
         collect_list("w_z").alias("w_z")) \
+    .orderBy(col("window.start")).asc() \
     .withColumn("classification", round(rand()*6)) \
     .select("user_id", "session_id", "window", "classification") \
     .selectExpr("user_id AS key", "CAST(to_json(struct(*)) AS STRING) AS value") \
