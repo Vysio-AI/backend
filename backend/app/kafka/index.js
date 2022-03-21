@@ -53,7 +53,7 @@ const processClassifications = async (message, socketService) => {
   var jsonMsg = JSON.parse(message.value.toString());
   console.log(jsonMsg);
 
-  socketService.emitter(`session-frame:${jsonMsg.session_id}`, msg);
+  socketService.emitter(`session-frame:${jsonMsg.session_id}`, jsonMsg);
 
   // If session is ended, ignore the incoming classification
   if (isSessionEnded(jsonMsg["client_id"], jsonMsg["session_id"])) {
