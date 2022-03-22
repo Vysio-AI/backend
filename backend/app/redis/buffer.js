@@ -16,15 +16,10 @@ const stringifyArrayData = (arr) => {
 
 // Formats and appends a data object to the buffer array
 const appendToBuffer = async (userId, sessionId, timestamp, data) => {
+  console.log(`Appending to buffer for userID ${userId}, sessionID ${sessionId}`)
   const key = createBufferKey(userId, sessionId);
   const timestampKey = createBufferTimestampKey(userId, sessionId);
   const dataString = stringifyArrayData(data);
-
-  // Check if timestamp is outside buffer window
-  if (isOutsideBufferWindow(userId, sessionId, timestamp)) {
-    // Failure
-    return false
-  }
 
   // Append data to buffer
   await client.RPUSH(key, dataString)
@@ -36,6 +31,7 @@ const appendToBuffer = async (userId, sessionId, timestamp, data) => {
 
 // Formats and returns the data in the buffer
 const flushBuffer = async (userId, sessionId) => {
+  console.log(`Flushing buffer for userID ${userId}, sessionID ${sessionId}`)
   const key = createBufferKey(userId, sessionId);
   const timestampKey = createBufferTimestampKey(userId, sessionId);
 
@@ -67,6 +63,7 @@ const flushBuffer = async (userId, sessionId) => {
 // the current buffer. This is used as a flag to decide when it is appropriate
 // to flush the buffer
 const isOutsideBufferWindow = async (userId, sessionId, timestamp) => {
+  console.log(`Checking buffer range for userID ${userId}, sessionID ${sessionId}`)
   const key = createBufferKey(userId, sessionId);
   const timestampKey = createBufferTimestampKey(userId, sessionId);
 
