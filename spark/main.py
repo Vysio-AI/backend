@@ -41,7 +41,7 @@ df = spark \
     .selectExpr("CAST(key AS STRING) AS user_id", "CAST(value AS STRING)") \
     .withColumn("json", from_json("value", schema)) \
     .select(col("user_id"), col("json.*")) \
-    .withWatermark("timestamp", "1 second") \
+    .withWatermark("timestamp", "10 seconds") \
     .groupBy(
         window("timestamp", "1 second"),
         "user_id", "session_id") \
