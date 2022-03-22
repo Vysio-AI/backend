@@ -50,12 +50,22 @@ const flushBuffer = async (userId, sessionId) => {
     return el.split(",").map(Number);
   })
 
+  let transposedData = [[], [], [], [], [], []];
+  formattedData.forEach(el => {
+    transposedData[0].push(el[0])
+    transposedData[1].push(el[1])
+    transposedData[2].push(el[2])
+    transposedData[3].push(el[3])
+    transposedData[4].push(el[4])
+    transposedData[5].push(el[5])
+  })
+
   return {
     user_id: userId,
     session_id: sessionId,
     start_time: Number(timestamps[0]),
     end_time: Number(timestamps[timestamps.length - 1]),
-    data: formattedData
+    data: transposedData
   }
 }
 
