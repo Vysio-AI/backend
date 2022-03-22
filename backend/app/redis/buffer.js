@@ -53,8 +53,8 @@ const flushBuffer = async (userId, sessionId) => {
   return {
     userId: userId,
     sessionId: sessionId,
-    startTime: timestamps[0],
-    endTime: timestamps[timestamps.length - 1],
+    startTime: Number(timestamps[0]),
+    endTime: Number(timestamps[timestamps.length - 1]),
     data: formattedData
   }
 }
