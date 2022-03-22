@@ -37,8 +37,6 @@ class SocketService {
       });
 
       socket.on('session-frame', (msg) => {
-        console.log(msg);
-
         const key = msg.user_id.toString();
         const value = JSON.stringify(msg);
 
