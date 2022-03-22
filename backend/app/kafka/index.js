@@ -3,6 +3,7 @@ const { Kafka } = require('kafkajs')
 const { getExerciseId, addSessionEnd, isSessionEnded } = require('../redis/cache');
 const { appendToBuffer, flushBuffer, isOutsideBufferWindow } = require('../redis/buffer');
 const { aggregateSessionFrames } = require('../job-processors/session-processor');
+const { updateSessionMetrics } = require('../job-processors/session-metrics');
 
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
@@ -150,8 +151,8 @@ const processNotification = async (message, socketService) => {
 // the session frames for a particular session before we receive this
 // message... But it will work for now...
 const processSessionEnd = async (message, socketService) => {
-  jsonMsg = JSON.parse(message.value.toString())
-  console.log(jsonMsg)
+  message = JSON.parse(message.value.toString())
+  console.log(message);
 
   const session = await prisma.session.findUnique({
     where: {
@@ -164,6 +165,7 @@ const processSessionEnd = async (message, socketService) => {
   await aggregateSessionFrames(session.id);
 
   // Create/update session metrics
+  await updateSessionMetrics(session);
 
   const updateSession = await prisma.session.update({
     where: {

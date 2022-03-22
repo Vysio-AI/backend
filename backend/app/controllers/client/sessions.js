@@ -107,10 +107,12 @@ const end = async (ctx) => {
   });
 
   // Add session end flag to redis
-  await addSessionEnd(ctx.client.id, sessionId);
+  // await addSessionEnd(ctx.client.id, sessionId);
+  await addSessionEnd(1, sessionId);
 
   // Produce session end message to kafka
-  const key = ctx.client.id.toString();
+  // const key = ctx.client.id.toString();
+  const key = "1";
   const msg = JSON.stringify({'sessionId': updateSession.id})
   await sendMessage(topics.SESSION_END, key, msg);
 

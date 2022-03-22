@@ -198,7 +198,7 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.sessions.end,
-        null
+        clientsController.sessions.end,
       )
     },
     notify: function(ctx) {
@@ -335,6 +335,15 @@ module.exports = {
         ctx,
         clientsController.invites.validateReferral,
         null
+      )
+    },
+  },
+  sessionMetrics: {
+    index: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.sessionMetrics.index
       )
     },
   },
