@@ -79,11 +79,7 @@ const isOutsideBufferWindow = async (userId, sessionId, timestamp) => {
   let converted = Number(firstTimestamp)
 
   // Compare timestamps
-  if (timestamp - converted > BUFFER_WINDOW) {
-    return true
-  } else {
-    return false
-  }
+  return timestamp - converted > BUFFER_WINDOW
 }
 
 module.exports = {

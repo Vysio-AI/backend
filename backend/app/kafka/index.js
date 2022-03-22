@@ -71,20 +71,20 @@ const processWatch = async (message, socketService) => {
     let key = String(msg.user_id)
     let value = JSON.stringify(windowedData);
     sendMessage(topics.WINDOWED, key, value);
-  } else {
-    // Append to buffer
-    let success = await appendToBuffer(msg.user_id, msg.session_id, msg.timestamp,[
-      msg.a_x,
-      msg.a_y,
-      msg.a_z,
-      msg.w_x,
-      msg.w_y,
-      msg.w_z
-    ]);
+  }
+  
+  // Append to buffer
+  let success = await appendToBuffer(msg.user_id, msg.session_id, msg.timestamp,[
+    msg.a_x,
+    msg.a_y,
+    msg.a_z,
+    msg.w_x,
+    msg.w_y,
+    msg.w_z
+  ]);
 
-    if (!success) {
-      console.log("Failed to append to buffer, window may be missing data");
-    }
+  if (!success) {
+    console.log("Failed to append to buffer, window may be missing data");
   }
 }
 
