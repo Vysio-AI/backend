@@ -198,7 +198,7 @@ module.exports = {
       return callUserTypeFunction(
         ctx,
         clientsController.sessions.end,
-        clientsController.sessions.end,
+        null
       )
     },
     notify: function(ctx) {

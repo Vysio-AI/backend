@@ -20,7 +20,10 @@ const createEmptyCompletionObject = (plan) => {
 }
 
 const isSessionMetricComplete = (sessionMetric) => {
-  for (const [_activityType, data] of Object.entries(sessionMetric)) {
+  console.log("completion");
+  console.log(sessionMetric.data);
+  for (const [_activityType, data] of Object.entries(sessionMetric.data)) {
+    console.log(data);
     if (data.completed < data.required) {
       return false;
     }
@@ -29,7 +32,7 @@ const isSessionMetricComplete = (sessionMetric) => {
   return true;
 }
 
-const updateSessionMetricCompletion = async (sessionMetric, session) => {
+const updateSessionMetricData = async (sessionMetric, session) => {
   const sessionFrames = await prisma.sessionFrame.findMany({
     where: {
       sessionId: session.id,
@@ -49,109 +52,86 @@ const updateSessionMetricCompletion = async (sessionMetric, session) => {
   return sessionMetric
 }
 
-const updateSessionMetrics = async (session) => {
-  // Query if there's already a session metric object for current time range
-  const currentSessionMetric = await prisma.sessionMetric.findFirst({
+const computeSubsequentStartTime = (mostRecentStartTime, sessionStartTime, plan) => {
+  const slideLength = 1/plan.repetitions;
+  const slideUnit = timeConversions[plan.timeframe];
+
+  const currentTime = moment(sessionStartTime);
+  let subsequentStartTime = moment(mostRecentStartTime);
+  let subsequentEndTime = subsequentStartTime.add(slideLength, slideUnit);
+
+  do {
+    subsequentStartTime = subsequentStartTime.add(slideLength, slideUnit);
+    subsequentEndTime = subsequentEndTime.add(slideLength, slideUnit);
+  } while (!currentTime.isBetween(subsequentStartTime, subsequentEndTime))
+
+  return subsequentStartTime
+}
+
+const createCurrentSessionMetric = async (mostRecentSessionMetric, session) => {
+  const plan = await prisma.plan.findUnique({
     where: {
-      clientId: session.clientId,
-      planId: session.planId,
-      startTime: {
-        lt: session.startTime,
-      },
-      endTime: {
-        gt: session.startTime,
-      },
+      id: session.planId,
+    },
+    include: {
+      exercises: true,
     },
   });
 
-  // If no currentSessionMetric found, create new one
-  if (!currentSessionMetric) {
-    console.log("No current session metric");
-    const mostRecentSessionMetrics = await prisma.sessionMetric.findMany({
-      take: 1,
-      where: {
-        clientId: session.clientId,
-        planId: session.planId
-      },
-      orderBy: [
-        {
-          startTime: 'desc',
-        },
-      ],
-    });
+  let startTime = mostRecentSessionMetric ?
+    computeSubsequentStartTime(mostRecentSessionMetric.startTime, session.startTime, plan) :
+    moment(session.startTime).startOf('hour');
+  const endTime = startTime.add(1/plan.repetitions, timeConversions[plan.timeframe]);
 
-    const plan = await prisma.plan.findUnique({
-      where: {
-        id: session.planId,
-      },
-      include: {
-        exercises: true,
-      },
-    });
+  const completionObj = createEmptyCompletionObject(plan);
 
-    console.log(mostRecentSessionMetrics);
-    console.log(plan);
-
-    let newSessionMetric = {
-      startTime: null,
-      endTime: null,
+  const sessionMetric = await prisma.sessionMetric.create({
+    data: {
+      startTime: startTime.format(),
+      endTime: endTime.format(),
       planId: session.planId,
       clientId: session.clientId,
-      complete: false,
-      data: createEmptyCompletionObject(plan),
+      data: completionObj
     }
+  });
 
-    console.log(newSessionMetric);
-    console.log(newSessionMetric.data);
+  return sessionMetric;
+}
 
-    if (mostRecentSessionMetrics.length > 0) {
-      const mostRecentSessionMetric = mostRecentSessionMetrics[0];
-      let newStartTime = moment(mostRecentSessionMetric.startTime);
-      let newEndTime = moment(mostRecentSessionMetric.endTime);
-      const currentTime = moment(session.startTime);
+const isCurrentSessionMetric = (sessionMetric, sessionStartTime) => {
+  return moment(sessionStartTime).isBetween(
+    moment(sessionMetric.startTime),
+    moment(sessionMetric.endTime)
+  )
+}
 
-      // Increase start and end time by the interval specified by the plan until
-      // the current session startTime is in between them
-      do {
-        newStartTime = newStartTime.add(1/plan.repetitions, timeConversions[plan.timeframe]);
-        newEndTime = newEndTime.add(1/plan.repetitions, timeConversions[plan.timeframe]);
-      } while (!currentTime.isBetween(newStartTime, newEndTime))
-
-      newSessionMetric.startTime = newStartTime;
-      newSessionMetric.endTime = newEndTime;
-    } else {
-      const newStartTime = moment(session.startTime).startOf('day');
-      newSessionMetric.startTime = newStartTime.format();
-      newSessionMetric.endTime = newStartTime.add(1/plan.repetitions, timeConversions[plan.timeframe]).format();
-    }
-
-    // let newSessionMetric = {
-    //   startTime: newStartTime,
-    //   endTime: newEndTime,
-    //   planId: session.planId,
-    //   clientId: session.clientId,
-    //   complete: false,
-    //   data: createEmptyCompletionObject(plan),
-    // }
-
-    console.log(newSessionMetric);
-
-    newSessionMetric = await updateSessionMetricCompletion(newSessionMetric, session);
-
-    await prisma.sessionMetric.create({
-      data: newSessionMetric,
-    });
-  }
-  else {
-    sessionMetric = await updateSessionMetricCompletion(currentSessionMetric, session);
-
-    await prisma.sessionMetric.update({
-      where: {
-        id: currentSessionMetric.id,
+const updateSessionMetrics = async (session) => {
+  const mostRecentSessionMetric = await prisma.sessionMetric.findFirst({
+    where: {
+      clientId: session.clientId,
+      planId: session.planId,
+    },
+    orderBy: [
+      {
+        startTime: 'desc',
       },
-      data: sessionMetric
-    });
-  }
+    ],
+  });
+
+  let currentSessionMetric = (mostRecentSessionMetric && isCurrentSessionMetric(mostRecentSessionMetric, session.startTime)) ?
+    mostRecentSessionMetric :
+    await createCurrentSessionMetric(mostRecentSessionMetric, session);
+
+  const updatedSessionMetricData = await updateSessionMetricData(currentSessionMetric, session);
+
+  const sessionMetric = await prisma.sessionMetric.update({
+    where: {
+      id: currentSessionMetric.id,
+    },
+    data: updatedSessionMetricData
+  });
+
+  return sessionMetric;
 }
 
 module.exports = {

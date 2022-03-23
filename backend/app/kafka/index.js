@@ -151,8 +151,8 @@ const processNotification = async (message, socketService) => {
 // the session frames for a particular session before we receive this
 // message... But it will work for now...
 const processSessionEnd = async (message, socketService) => {
-  message = JSON.parse(message.value.toString())
-  console.log(message);
+  jsonMsg = JSON.parse(message.value.toString())
+  console.log(jsonMsg);
 
   const session = await prisma.session.findUnique({
     where: {
@@ -165,7 +165,7 @@ const processSessionEnd = async (message, socketService) => {
   await aggregateSessionFrames(session.id);
 
   // Create/update session metrics
-  await updateSessionMetrics(session);
+  const sessionMetric = await updateSessionMetrics(session);
 
   const updateSession = await prisma.session.update({
     where: {
@@ -178,6 +178,11 @@ const processSessionEnd = async (message, socketService) => {
 
   // Emit message over socket to notify frontend that session has been processed
   socketService.emitter(`session:${updateSession.id}`, 'PROCESSED');
+
+  if (sessionMetric.complete) {
+    // TODO: Emit message over websocket
+    console.log("Session completed plan requirements!");
+  }
 }
 
 const sendMessage = async (topic, key, message) => {
