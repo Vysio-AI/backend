@@ -98,17 +98,15 @@ const processClassifications = async (message, socketService) => {
   var jsonMsg = JSON.parse(message.value.toString());
   console.log(jsonMsg);
 
-  socketService.emitter(`session-frame:${jsonMsg.session_id}`, jsonMsg);
-
   // If session is ended, ignore the incoming classification
-  if (isSessionEnded(jsonMsg["client_id"], jsonMsg["session_id"])) {
+  if (isSessionEnded(jsonMsg["user_id"], jsonMsg["session_id"])) {
     return
   }
 
   const exerciseId = await getExerciseId(
-    jsonMsg["client_id"],
+    jsonMsg["user_id"],
     jsonMsg["session_id"],
-    jsonMsg["activity"]
+    jsonMsg["classification"]
   )
 
   // Session frame was classified as an activity that's not in the session's
@@ -117,19 +115,13 @@ const processClassifications = async (message, socketService) => {
     return
   }
 
-  const msg = {
-    exerciseId: exerciseId,
-    start: jsonMsg["window"]["start"],
-    end: jsonMsg["window"]["end"]
-  }
-
   // Emit to session-frame socket
-  socketService.emitter('session-frame:${sessionId}', msg);
+  socketService.emitter(`session-frame:${jsonMsg.session_id}`, jsonMsg);
 
   await prisma.sessionFrame.create({
     data: {
-      startTime: jsonMsg["window"]["start"],
-      endTime: jsonMsg["window"]["end"],
+      startTime: jsonMsg["start_time"],
+      endTime: jsonMsg["end_time"],
       exerciseId: exerciseId,
       sessionId: jsonMsg["session_id"],
     }
@@ -155,11 +147,12 @@ const processNotification = async (message, socketService) => {
 // the session frames for a particular session before we receive this
 // message... But it will work for now...
 const processSessionEnd = async (message, socketService) => {
-  message = JSON.parse(message.value.toString())
+  jsonMsg = JSON.parse(message.value.toString())
+  console.log(jsonMsg)
 
   const session = await prisma.session.findUnique({
     where: {
-      id: message.sessionId
+      id: jsonMsg.sessionId
     },
     include: {
       flags: true,
@@ -187,9 +180,9 @@ const processSessionEnd = async (message, socketService) => {
     )
   }
 
-  await prisma.session.update({
+  const updateSession = await prisma.session.update({
     where: {
-      id: message.sessionId
+      id: jsonMsg.sessionId
     },
     data: {
       status: 'PROCESSED'
@@ -197,7 +190,7 @@ const processSessionEnd = async (message, socketService) => {
   })
 
   // Emit message over socket to notify frontend that session has been processed
-  socketService.emitter(`sessions:${updateSession.id}`, 'PROCESSED');
+  socketService.emitter(`session:${updateSession.id}`, 'PROCESSED');
 }
 
 const isNotableSession = (session) => {

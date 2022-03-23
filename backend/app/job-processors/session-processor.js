@@ -2,7 +2,7 @@ const prisma = require('../controllers/prisma-client')
 
 const areSessionFramesConsecutive = (firstSessionFrame, secondSessionFrame) => {
   // TODO: We might need to add a variance value in case the endTime and
-  //       startTime don't line up perfectly
+  //       start time don't line up perfectly
   const firstDate = new Date(firstSessionFrame.endTime);
   const secondDate = new Date(secondSessionFrame.startTime);
   return firstDate.getTime() == secondDate.getTime()
