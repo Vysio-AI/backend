@@ -77,6 +77,25 @@ const sessionNotificationHandler = async (notification, socketService) => {
     console.log(`Unable to send session to ${notification.clientEmail}`);
     console.log(error);
   }
+
+  const notificationStatus = isSent ? 'SENT' : 'FAILED';
+
+  const updatedSessionNotification = await prisma.sessionNotification.update({
+    where: {
+      sessionId: notification.sessionId,
+    },
+    data: {
+      status: notificationStatus,
+    },
+  });
+
+  socketService.emitter(
+    `sesssion-notifications:${practitioner.id}`,
+    {
+      sessionNotificationId: updatedSessionNotification.id,
+      status: notificationStatus
+    }
+  );
 }
 
 const notificationHandlers = {

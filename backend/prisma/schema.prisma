@@ -46,16 +46,33 @@ enum SessionStatus {
   PROCESSED
 }
 
+enum NotificationStatus {
+  QUEUED
+  SENT
+  FAILED
+}
+
+model SessionNotification {
+  id             Int                @id @default(autoincrement())
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  status         NotificationStatus @default(QUEUED)
+  session        Session            @relation(fields: [sessionId], references: [id])
+  sessionId      Int                @unique
+  practitionerId Int
+  viewed         Boolean            @default(false)
+}
+
 model Session {
-  id                       Int            @id @default(autoincrement())
-  createdAt                DateTime       @default(now())
-  updatedAt                DateTime       @updatedAt
+  id                       Int                  @id @default(autoincrement())
+  createdAt                DateTime             @default(now())
+  updatedAt                DateTime             @updatedAt
   startTime                DateTime
   endTime                  DateTime?
-  status                   SessionStatus  @default(IN_PROGRESS)
+  status                   SessionStatus        @default(IN_PROGRESS)
   sessionFrames            SessionFrame[]
-  flags                    Flag[]
-  Client                   Client         @relation(fields: [clientId], references: [id])
+  notification             SessionNotification?
+  Client                   Client               @relation(fields: [clientId], references: [id])
   clientId                 Int
   planId                   Int
   practitionerId           Int
@@ -75,18 +92,6 @@ model SessionFrame {
   Session    Session  @relation(fields: [sessionId], references: [id])
   sessionId  Int
   exerciseId Int
-}
-
-model Flag {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  time           DateTime
-  notes          String?
-  Session        Session  @relation(fields: [sessionId], references: [id])
-  sessionId      Int
-  clientId       Int
-  practitionerId Int
 }
 
 model Video {

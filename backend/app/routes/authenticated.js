@@ -9,6 +9,7 @@ const {
   exercises,
   sessions,
   sessionFrames,
+  sessionNotifications,
   flags,
   videos,
   invites
@@ -64,11 +65,17 @@ router.get('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions
 router.patch('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.update);
 router.delete('/sessions/:id', m.checkToken, m.setUser, m.validateRequest, sessions.destroy);
 router.post('/sessions/:id/end', m.checkToken, m.setUser, m.validateRequest, sessions.end);
+router.post('/sessions/:id/notify', m.checkToken, m.setUser, m.validateRequest, sessions.notify);
 router.get('/sessions/:id/session-frames', m.checkToken, m.setUser, m.validateRequest, sessions.getAllSessionFrames);
 router.get('/sessions/:id/flags', m.checkToken, m.setUser, m.validateRequest, sessions.getAllFlags);
 
 // Session Frames
 router.get('/session-frames/:id', m.checkToken, m.setUser, m.validateRequest, sessionFrames.get);
+
+// Session Notifications
+router.get('/session-notifications', m.checkToken, m.setUser, m.validateRequest, sessionNotifications.index);
+router.get('/session-notifications/:id', m.checkToken, m.setUser, m.validateRequest, sessionNotifications.get);
+router.post('/session-notifications/:id', m.checkToken, m.setUser, m.validateRequest, sessionNotifications.update);
 
 // Flags
 router.post('/flags', m.checkToken, m.setUser, m.validateRequest, flags.create);

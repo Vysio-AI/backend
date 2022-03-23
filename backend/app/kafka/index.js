@@ -171,21 +171,6 @@ const processSessionEnd = async (message, socketService) => {
 
   // Create/update session metrics
 
-  // Produce session summary notification if session is notable
-  if (isNotableSession(session)) {
-    await sendMessage(
-      topics.NOTIFICATIONS,
-      session.practitionerId.toString(),
-      JSON.stringify({
-        notificationType: 'SESSION',
-        sessionId: session.id,
-        clientId: session.clientId,
-        planId: session.planId,
-        practitionerId: session.practitionerId,
-      })
-    )
-  }
-
   const updateSession = await prisma.session.update({
     where: {
       id: jsonMsg.sessionId
@@ -197,10 +182,6 @@ const processSessionEnd = async (message, socketService) => {
 
   // Emit message over socket to notify frontend that session has been processed
   socketService.emitter(`session:${updateSession.id}`, 'PROCESSED');
-}
-
-const isNotableSession = (session) => {
-  return session.flags.length > 0
 }
 
 const sendMessage = async (topic, key, message) => {

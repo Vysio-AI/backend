@@ -201,6 +201,13 @@ module.exports = {
         null
       )
     },
+    notify: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        clientsController.sessions.notify,
+        null
+      )
+    },
     getAllSessionFrames: function(ctx) {
       return callUserTypeFunction(
         ctx,
@@ -215,6 +222,29 @@ module.exports = {
         practitionersController.sessions.getAllFlags,
       )
     }
+  },
+  sessionNotifications: {
+    index: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.sessionNotifications.index
+      )
+    },
+    get: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.sessionNotifications.get
+      )
+    },
+    update: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.sessionNotifications.update
+      )
+    },
   },
   sessionFrames: {
     get: function(ctx) {

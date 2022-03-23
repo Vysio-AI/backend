@@ -5,6 +5,7 @@ const signups = require('./signups');
 const plans = require('./plans');
 const exercises = require('./exercises');
 const sessions = require('./sessions');
+const sessionNotifications = require('./session-notifications');
 const sessionFrames = require('./session-frames');
 const flags = require('./flags');
 const videos = require('./videos');
@@ -17,6 +18,7 @@ module.exports = {
   plans: plans,
   exercises: exercises,
   sessions: sessions,
+  sessionNotifications: sessionNotifications,
   sessionFrames: sessionFrames,
   flags: flags,
   videos: videos,

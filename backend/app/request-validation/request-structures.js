@@ -123,6 +123,11 @@ const requestStructures = {
       new RequestParameter('endTime', TypeValidator.DATE_TIME, true),
     ),
   },
+  '/api/v1/sessions/:id/notify': {
+    'POST': new RequestStructure(
+      new RequestParameter('practitionerId', TypeValidator.INT, true),
+    ),
+  },
   '/api/v1/sessions/:id/session-frames': {
     'GET': new RequestStructure(),
   },
@@ -132,6 +137,15 @@ const requestStructures = {
   '/api/v1/session-frames/:id': {
     'GET': new RequestStructure(
       new RequestParameter('sessionId', TypeValidator.INT, true),
+    ),
+  },
+  '/api/v1/session-notifications': {
+    'GET': new RequestStructure(),
+  },
+  '/api/v1/session-notifications/:id': {
+    'GET': new RequestStructure(),
+    'POST': new RequestStructure(
+      new RequestParameter('viewed', TypeValidator.BOOLEAN, true),
     ),
   },
   '/api/v1/flags': {

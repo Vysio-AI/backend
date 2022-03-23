@@ -118,6 +118,36 @@ const end = async (ctx) => {
   ctx.status = 200;
 }
 
+const notify = async (ctx) => {
+  const sessionId = parseInt(ctx.params.id);
+
+  const updateSession = await prisma.session.update({
+    where: {
+      id: sessionId,
+    },
+    data: {
+      notification: {
+        create: ctx.request.body,
+      },
+    },
+  });
+
+  await sendMessage(
+    topics.NOTIFICATIONS,
+    updateSession.practitionerId.toString(),
+    JSON.stringify({
+      notificationType: 'SESSION',
+      sessionId: updateSession.id,
+      clientId: updateSession.clientId,
+      planId: updateSession.planId,
+      practitionerId: updateSession.practitionerId,
+    })
+  );
+
+  ctx.body = updateSession;
+  ctx.status = 200;
+}
+
 const getAllSessionFrames = async (ctx) => {
   const sessionId = parseInt(ctx.params.id);
 
@@ -173,6 +203,7 @@ module.exports = {
   update,
   destroy,
   end,
+  notify,
   getAllSessionFrames,
   getAllFlags
 };
