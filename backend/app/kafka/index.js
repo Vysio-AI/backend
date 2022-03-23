@@ -99,7 +99,8 @@ const processClassifications = async (message, socketService) => {
   console.log(jsonMsg);
 
   // If session is ended, ignore the incoming classification
-  if (isSessionEnded(jsonMsg["user_id"], jsonMsg["session_id"])) {
+  let sessionEnded = await isSessionEnded(jsonMsg["user_id"], jsonMsg["session_id"]);
+  if (sessionEnded) {
     console.log("session ended, ignoring session frames")
     return
   }
