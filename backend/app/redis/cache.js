@@ -51,7 +51,8 @@ const addSessionEnd = async (clientId, sessionId) => {
 
 const isSessionEnded = async (clientId, sessionId) => {
   const sessionEndKey = createSessionEndKey(clientId, sessionId);
-  return await client.get(sessionEndKey) ? true : false
+  let ended = await client.get(sessionEndKey); 
+  return ended ? true : false
 }
 
 module.exports = {
