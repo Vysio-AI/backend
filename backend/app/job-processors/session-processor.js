@@ -5,7 +5,7 @@ const areSessionFramesConsecutive = (firstSessionFrame, secondSessionFrame) => {
   //       start time don't line up perfectly
   const firstDate = new Date(firstSessionFrame.endTime);
   const secondDate = new Date(secondSessionFrame.startTime);
-  return firstDate.getTime() == secondDate.getTime()
+  return secondDate.getTime() - firstDate.getTime() < 1000;
 }
 
 const aggregateSessionFrames = async (sessionId) => {
