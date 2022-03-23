@@ -52,14 +52,12 @@ const flushBuffer = async (userId, sessionId) => {
 
   let transposedData = [[], [], [], [], [], []];
   formattedData.forEach(el => {
-    for (let i = 0; i < 4; i++) {
-      transposedData[0].push(el[0])
-      transposedData[1].push(el[1])
-      transposedData[2].push(el[2])
-      transposedData[3].push(el[3])
-      transposedData[4].push(el[4])
-      transposedData[5].push(el[5])
-    }
+    transposedData[0].push(el[0])
+    transposedData[1].push(el[1])
+    transposedData[2].push(el[2])
+    transposedData[3].push(el[3])
+    transposedData[4].push(el[4])
+    transposedData[5].push(el[5])
   })
 
   return {
