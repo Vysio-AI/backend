@@ -90,13 +90,11 @@ const processWatch = async (message, socketService) => {
 
 const processWindowed = async (message) => {
   let msg = JSON.parse(message.value.toString());
-  console.log(msg);
 }
 
 const processClassifications = async (message, socketService) => {
   // Parse json message
   var jsonMsg = JSON.parse(message.value.toString());
-  console.log(jsonMsg);
 
   // If session is ended, ignore the incoming classification
   let sessionEnded = await isSessionEnded(jsonMsg["user_id"], jsonMsg["session_id"]);
@@ -105,7 +103,6 @@ const processClassifications = async (message, socketService) => {
     return
   }
 
-  console.log("Fetching exerciseId")
   const exerciseId = await getExerciseId(
     jsonMsg["user_id"],
     jsonMsg["session_id"],
@@ -159,9 +156,6 @@ const processSessionEnd = async (message, socketService) => {
   const session = await prisma.session.findUnique({
     where: {
       id: jsonMsg.sessionId
-    },
-    include: {
-      flags: true,
     }
   });
 

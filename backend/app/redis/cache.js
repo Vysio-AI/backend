@@ -52,7 +52,6 @@ const addSessionEnd = async (clientId, sessionId) => {
 const isSessionEnded = async (clientId, sessionId) => {
   const sessionEndKey = createSessionEndKey(clientId, sessionId);
   let ended = await client.get(sessionEndKey);
-  console.log(ended);
   return ended ? true : false
 }
 
