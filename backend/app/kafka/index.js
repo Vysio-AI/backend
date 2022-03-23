@@ -104,11 +104,14 @@ const processClassifications = async (message, socketService) => {
     return
   }
 
+  console.log("Fetching exerciseId")
   const exerciseId = await getExerciseId(
     jsonMsg["user_id"],
     jsonMsg["session_id"],
     jsonMsg["classification"]
   )
+
+  console.log(exerciseId)
 
   // Session frame was classified as an activity that's not in the session's
   // plan
