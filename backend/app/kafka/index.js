@@ -72,7 +72,7 @@ const processWatch = async (message, socketService) => {
     let value = JSON.stringify(windowedData);
     sendMessage(topics.WINDOWED, key, value);
   }
-  
+
   // Append to buffer
   let success = await appendToBuffer(msg.user_id, msg.session_id, msg.timestamp,[
     msg.a_x,
@@ -100,6 +100,7 @@ const processClassifications = async (message, socketService) => {
 
   // If session is ended, ignore the incoming classification
   if (isSessionEnded(jsonMsg["user_id"], jsonMsg["session_id"])) {
+    console.log("session ended, ignoring session frames")
     return
   }
 
@@ -112,6 +113,7 @@ const processClassifications = async (message, socketService) => {
   // Session frame was classified as an activity that's not in the session's
   // plan
   if (!exerciseId) {
+    console.log("Exercise not defined")
     return
   }
 
