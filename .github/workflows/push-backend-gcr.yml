@@ -24,11 +24,3 @@ jobs:
     - name: Push to Google Container Registry
       run:  docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/vysio-backend:latest
       
-    - name: Pull images and restart backend service
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.PORT }}
-        script: "/bin/bash -c 'cd /vysio/deployment && ./restart.sh'"
