@@ -126,8 +126,8 @@ const processClassifications = async (message, socketService) => {
 
   await prisma.sessionFrame.create({
     data: {
-      startTime: jsonMsg["start_time"],
-      endTime: jsonMsg["end_time"],
+      startTime: new Date(jsonMsg["start_time"]),
+      endTime: new Date(jsonMsg["end_time"]),
       exerciseId: exerciseId,
       sessionId: jsonMsg["session_id"],
     }
