@@ -7,6 +7,7 @@
     "start": "nodemon app/index.js",
     "start-prod": "node app/index.js",
     "migrate": "prisma migrate dev",
+    "migrate-prod": "prisma migrate deploy",
     "test-invite-email": "node app/test/scripts/invite-email.js"
   },
   "dependencies": {
