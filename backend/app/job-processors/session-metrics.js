@@ -20,10 +20,7 @@ const createEmptyCompletionObject = (plan) => {
 }
 
 const isSessionMetricComplete = (sessionMetric) => {
-  console.log("completion");
-  console.log(sessionMetric.data);
   for (const [_activityType, data] of Object.entries(sessionMetric.data)) {
-    console.log(data);
     if (data.completed < data.required) {
       return false;
     }
@@ -44,7 +41,7 @@ const updateSessionMetricData = async (sessionMetric, session) => {
 
   sessionFrames.forEach((sessionFrame) => {
     const sessionFrameLength = moment(sessionFrame.endTime).diff(moment(sessionFrame.startTime), 'seconds');
-    sessionMetric.data[sessionFrame.exercise.activityType] += sessionFrameLength;
+    sessionMetric.data[sessionFrame.exercise.activityType].completed += sessionFrameLength;
   });
 
   sessionMetric.complete = isSessionMetricComplete(sessionMetric);
@@ -58,11 +55,11 @@ const computeSubsequentStartTime = (mostRecentStartTime, sessionStartTime, plan)
 
   const currentTime = moment(sessionStartTime);
   let subsequentStartTime = moment(mostRecentStartTime);
-  let subsequentEndTime = subsequentStartTime.add(slideLength, slideUnit);
+  let subsequentEndTime = moment(subsequentStartTime).add(slideLength, slideUnit);
 
   do {
-    subsequentStartTime = subsequentStartTime.add(slideLength, slideUnit);
-    subsequentEndTime = subsequentEndTime.add(slideLength, slideUnit);
+    subsequentStartTime.add(slideLength, slideUnit);
+    subsequentEndTime.add(slideLength, slideUnit);
   } while (!currentTime.isBetween(subsequentStartTime, subsequentEndTime))
 
   return subsequentStartTime
@@ -81,7 +78,7 @@ const createCurrentSessionMetric = async (mostRecentSessionMetric, session) => {
   let startTime = mostRecentSessionMetric ?
     computeSubsequentStartTime(mostRecentSessionMetric.startTime, session.startTime, plan) :
     moment(session.startTime).startOf('hour');
-  const endTime = startTime.add(1/plan.repetitions, timeConversions[plan.timeframe]);
+  const endTime = moment(startTime).add(1/plan.repetitions, timeConversions[plan.timeframe]);
 
   const completionObj = createEmptyCompletionObject(plan);
 
@@ -91,9 +88,11 @@ const createCurrentSessionMetric = async (mostRecentSessionMetric, session) => {
       endTime: endTime.format(),
       planId: session.planId,
       clientId: session.clientId,
-      data: completionObj
+      data: JSON.stringify(completionObj)
     }
   });
+
+  sessionMetric.data = JSON.parse(sessionMetric.data);
 
   return sessionMetric;
 }
@@ -118,12 +117,17 @@ const updateSessionMetrics = async (session) => {
     ],
   });
 
+  if (mostRecentSessionMetric) {
+    mostRecentSessionMetric.data = JSON.parse(mostRecentSessionMetric.data);
+  }
+
   let currentSessionMetric = (mostRecentSessionMetric && isCurrentSessionMetric(mostRecentSessionMetric, session.startTime)) ?
     mostRecentSessionMetric :
     await createCurrentSessionMetric(mostRecentSessionMetric, session);
 
   const updatedSessionMetricData = await updateSessionMetricData(currentSessionMetric, session);
 
+  updatedSessionMetricData.data = JSON.stringify(updatedSessionMetricData.data);
   const sessionMetric = await prisma.sessionMetric.update({
     where: {
       id: currentSessionMetric.id,
