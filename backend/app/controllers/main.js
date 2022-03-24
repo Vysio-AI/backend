@@ -338,6 +338,15 @@ module.exports = {
       )
     },
   },
+  sessionMetrics: {
+    index: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.sessionMetrics.index
+      )
+    },
+  },
 }
 
 

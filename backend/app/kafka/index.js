@@ -3,6 +3,7 @@ const { Kafka } = require('kafkajs')
 const { getExerciseId, addSessionEnd, isSessionEnded } = require('../redis/cache');
 const { appendToBuffer, flushBuffer, isOutsideBufferWindow } = require('../redis/buffer');
 const { aggregateSessionFrames } = require('../job-processors/session-processor');
+const { updateSessionMetrics } = require('../job-processors/session-metrics');
 
 const kafka = new Kafka({
   clientId: 'vysio-backend1',
@@ -151,7 +152,7 @@ const processNotification = async (message, socketService) => {
 // message... But it will work for now...
 const processSessionEnd = async (message, socketService) => {
   jsonMsg = JSON.parse(message.value.toString())
-  console.log(jsonMsg)
+  console.log(jsonMsg);
 
   const session = await prisma.session.findUnique({
     where: {
@@ -164,6 +165,7 @@ const processSessionEnd = async (message, socketService) => {
   await aggregateSessionFrames(session.id);
 
   // Create/update session metrics
+  const sessionMetric = await updateSessionMetrics(session);
 
   const updateSession = await prisma.session.update({
     where: {
@@ -176,6 +178,11 @@ const processSessionEnd = async (message, socketService) => {
 
   // Emit message over socket to notify frontend that session has been processed
   socketService.emitter(`session:${updateSession.id}`, 'PROCESSED');
+
+  if (sessionMetric.complete) {
+    // TODO: Emit message over websocket
+    console.log("Session completed plan requirements!");
+  }
 }
 
 const sendMessage = async (topic, key, message) => {

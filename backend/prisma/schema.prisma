@@ -145,8 +145,6 @@ model Plan {
 enum TimeFrame {
   DAILY
   WEEKLY
-  BIWEEKLY
-  MONTHLY
 }
 
 enum InviteStatus {
@@ -169,4 +167,16 @@ model Invite {
   clientFirstName String
   clientLastName  String
   referralCode    String       @unique
+}
+
+model SessionMetric {
+  id              Int          @id @default(autoincrement())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  startTime       DateTime
+  endTime         DateTime
+  planId          Int
+  clientId        Int
+  complete        Boolean      @default(false)
+  data            String
 }

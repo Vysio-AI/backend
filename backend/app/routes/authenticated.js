@@ -12,7 +12,8 @@ const {
   sessionNotifications,
   flags,
   videos,
-  invites
+  invites,
+  sessionMetrics,
 } = require('../controllers/main');
 
 // Import middlewares
@@ -93,5 +94,8 @@ router.get('/invites', m.checkToken, m.setUser, m.validateRequest, invites.index
 router.post('/invites', m.checkToken, m.setUser, m.validateRequest, invites.create);
 router.patch('/invites/:id', m.checkToken, m.setUser, m.validateRequest, invites.update);
 router.post('/invites/referral', m.checkToken, m.setUser, m.validateRequest, invites.validateReferral);
+
+// Session Metrics
+router.get('/metrics', m.checkToken, m.setUser, m.validateRequest, sessionMetrics.index);
 
 module.exports = router

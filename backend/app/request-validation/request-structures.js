@@ -197,6 +197,11 @@ const requestStructures = {
       new RequestParameter('referralCode', TypeValidator.REFERRAL_CODE, true),
     ),
   },
+  '/api/v1/metrics': {
+    'GET': new RequestStructure(
+      new RequestParameter('clientId', TypeValidator.INT, true),
+    ),
+  },
 }
 
 module.exports = requestStructures;
