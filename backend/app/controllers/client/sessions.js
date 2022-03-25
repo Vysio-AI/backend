@@ -83,6 +83,12 @@ const destroy = async (ctx) => {
     await storage.deleteVideoFile(video.fileName);
   }
 
+  const deleteSessionFrames = await prisma.sessionFrame.deleteMany({
+    where: {
+      sessionId: id
+    }
+  });
+
   // Delete session
   await prisma.session.delete({
     where: {
