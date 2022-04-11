@@ -91,6 +91,13 @@ const destroy = async (ctx) => {
     return
   }
 
+  // Delete notification
+  await prisma.sessionNotification.delete({
+    where: {
+      sessionId: sessionId
+    }
+  })
+
   // Delete video
   const video = await prisma.video.delete({
     where: {
