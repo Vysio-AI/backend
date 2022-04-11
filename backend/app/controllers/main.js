@@ -346,11 +346,13 @@ module.exports = {
         practitionersController.sessionMetrics.index
       )
     },
-    get: callUserTypeFunction(
-      ctx,
-      null,
-      practitionersController.sessionMetrics.get
-    )
+    get: function(ctx) {
+      return callUserTypeFunction(
+        ctx,
+        null,
+        practitionersController.sessionMetrics.get
+      )
+    }
   },
 }
 
