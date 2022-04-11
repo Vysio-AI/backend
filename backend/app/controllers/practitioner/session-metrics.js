@@ -15,5 +15,5 @@ const index = async (ctx) => {
 }
 
 module.exports = {
-
+  index
 }
