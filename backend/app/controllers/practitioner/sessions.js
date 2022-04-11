@@ -38,7 +38,7 @@ const get = async (ctx) => {
     return
   }
 
-  if (session && session.status == "COMPLETED") {
+  if (session && session.status == "PROCESSED") {
     const video = await prisma.video.findUnique({
       where: {
         sessionId: session.id
