@@ -14,6 +14,22 @@ const index = async (ctx) => {
   ctx.status = 200;
 }
 
+const get = async (ctx) => {
+  const clientId = parseInt(ctx.request.clientId)
+  const sessionMetrics = await prisma.sessionMetric.findMany({
+    where: {
+      clientId: clientId,
+    },
+    orderBy: {
+      startTime: 'desc',
+    }
+  });
+
+  ctx.body = sessionMetrics;
+  ctx.status = 200;
+}
+
 module.exports = {
-  index
+  index,
+  get
 }

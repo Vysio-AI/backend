@@ -97,5 +97,6 @@ router.post('/invites/referral', m.checkToken, m.setUser, m.validateRequest, inv
 
 // Session Metrics
 router.get('/metrics', m.checkToken, m.setUser, m.validateRequest, sessionMetrics.index);
+router.get('/metrics/:clientId', m.checkToken, m.setUser, m.validateRequest, sessionMetrics.get);
 
 module.exports = router

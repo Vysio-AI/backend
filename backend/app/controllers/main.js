@@ -346,6 +346,11 @@ module.exports = {
         practitionersController.sessionMetrics.index
       )
     },
+    get: callUserTypeFunction(
+      ctx,
+      null,
+      practitionersController.sessionMetrics.get
+    )
   },
 }
 

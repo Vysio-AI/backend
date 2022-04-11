@@ -202,6 +202,9 @@ const requestStructures = {
       new RequestParameter('clientId', TypeValidator.INT, true),
     ),
   },
+  '/api/v1/metrics/:clientId': {
+    'GET': new RequestStructure(),
+  }
 }
 
 module.exports = requestStructures;
