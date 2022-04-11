@@ -84,11 +84,19 @@ const destroy = async (ctx) => {
   }
 
   // Delete notification if exists
-  await prisma.sessionNotification.delete({
+  const sessionNotification = await prisma.sessionNotification.findUnique({
     where: {
       sessionId: id
     }
   })
+
+  if (sessionNotification) {
+    await prisma.sessionNotification.delete({
+      where: {
+        sessionId: id
+      }
+    })
+  }
 
   const deleteSessionFrames = await prisma.sessionFrame.deleteMany({
     where: {
