@@ -97,6 +97,8 @@ const processClassifications = async (message, socketService) => {
   // Parse json message
   var jsonMsg = JSON.parse(message.value.toString());
 
+  console.log(jsonMsg)
+
   // If session is ended, ignore the incoming classification
   let sessionEnded = await isSessionEnded(jsonMsg["user_id"], jsonMsg["session_id"]);
   if (sessionEnded) {
