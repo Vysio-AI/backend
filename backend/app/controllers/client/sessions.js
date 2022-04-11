@@ -86,7 +86,7 @@ const destroy = async (ctx) => {
   // Delete notification if exists
   await prisma.sessionNotification.delete({
     where: {
-      sessionId: sessionId
+      sessionId: id
     }
   })
 
