@@ -202,7 +202,7 @@ const requestStructures = {
       new RequestParameter('clientId', TypeValidator.INT, true),
     ),
   },
-  '/api/v1/metrics/:clientId': {
+  '/api/v1/metrics/:id': {
     'GET': new RequestStructure(),
   }
 }

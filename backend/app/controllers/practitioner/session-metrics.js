@@ -15,7 +15,7 @@ const index = async (ctx) => {
 }
 
 const get = async (ctx) => {
-  const clientId = parseInt(ctx.request.clientId)
+  const clientId = parseInt(ctx.params.id)
   const sessionMetrics = await prisma.sessionMetric.findMany({
     where: {
       clientId: clientId,
